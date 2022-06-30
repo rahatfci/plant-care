@@ -1,0 +1,75 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import '../authentication/auth.dart';
+import '../constants.dart';
+
+Future<bool> isAdmin() async {
+  return await (FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .get()
+      .then((value) {
+    return value.data()!['userType'] == 'admin' ? true : false;
+  }));
+}
+
+AppBar buildAppBar(BuildContext context, String title, IconData icon,
+    GlobalKey<ScaffoldState> scaffoldKey) {
+  void toggleDrawer() {
+    if (scaffoldKey.currentState!.isDrawerOpen) {
+      scaffoldKey.currentState!.openEndDrawer();
+    } else {
+      scaffoldKey.currentState!.openDrawer();
+    }
+  }
+
+  return AppBar(
+    leading: FutureBuilder<bool>(
+        future: isAdmin(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            return snapshot.data!
+                ? IconButton(
+                    onPressed: toggleDrawer,
+                    icon: const Icon(
+                      Icons.menu,
+                      size: 30,
+                    ))
+                : Icon(
+                    icon,
+                    size: 30,
+                  );
+          } else {
+            return const SizedBox.shrink();
+          }
+        }),
+    backgroundColor: kPrimaryColor,
+    title: Text(
+      title,
+      style: const TextStyle(
+          color: Colors.white, fontSize: 20, fontFamily: 'Poppins'),
+    ),
+    actions: <Widget>[
+      IconButton(
+          icon: const Icon(
+            Icons.public,
+            size: 30,
+          ),
+          onPressed: () async {
+            if (ModalRoute.of(context)!.settings.name != '/') {
+              Navigator.pushNamed(context, '/');
+            }
+          }),
+      IconButton(
+          icon: const Icon(
+            Icons.logout,
+            size: 30,
+          ),
+          onPressed: () async {
+            await signOut(context);
+          }),
+    ],
+  );
+}

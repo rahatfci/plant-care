@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "977885245789",
+    "project_id": "plant-watch-fci",
+    "storage_bucket": "plant-watch-fci.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977885245789:android:6963e47b3ee9b278d5b8b4",
+        "android_client_info": {
+          "package_name": "com.example.plant_watch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "977885245789-hpkhbnajpeuc5mu2qj8pqhcod4f9b942.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.plant_watch",
+            "certificate_hash": "bb8eee851feb326daf874b2863f242a6381b6581"
+          }
+        },
+        {
+          "client_id": "977885245789-ivapp4lq7n04ql144hnpi5jpdt9r207n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.plant_watch",
+            "certificate_hash": "42ddf54ce750a10b575d9238d42968a807541e81"
+          }
+        },
+        {
+          "client_id": "977885245789-rs7i85g5neg9h1fg8tm20dhkggpuasek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsC5uBn1fgFbMWX4GsaUpipcbPOdQ3xSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "977885245789-rs7i85g5neg9h1fg8tm20dhkggpuasek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

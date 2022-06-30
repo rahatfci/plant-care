@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Plant Watch</string>
+    <string name="facebook_app_id">1689500484726104</string>
+    <string name="facebook_client_token">bf7fa890e97d72bd55ad1a8838aec45c</string>
+    <string name="fb_login_protocol_scheme">fb1689500484726104</string>
+</resources>
