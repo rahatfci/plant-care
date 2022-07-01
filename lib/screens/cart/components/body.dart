@@ -23,11 +23,11 @@ class _BodyState extends State<Body> {
             builder: (context, AsyncSnapshot<List<Cart>> snapshot) {
               if (snapshot.hasData) {
                 return Expanded(
-                  child: ListView.builder(
+                  child: ListView(
                       padding: const EdgeInsets.only(top: 5),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, i) =>
-                          buildCart(snapshot.data![i], setState)),
+                      children: snapshot.data!
+                          .map((e) => buildCart(e, setState))
+                          .toList()),
                 );
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');

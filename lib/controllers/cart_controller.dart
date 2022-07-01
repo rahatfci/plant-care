@@ -15,8 +15,8 @@ class CartController {
   static Stream<Product> cartProduct(String productId) {
     return FirebaseFirestore.instance
         .collection('products')
-        .doc(productId)
+        .where('id', isEqualTo: productId)
         .snapshots()
-        .map((event) => Product.fromJson(event.data()));
+        .map((event) => Product.fromJson(event));
   }
 }

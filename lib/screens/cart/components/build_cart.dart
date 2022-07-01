@@ -7,7 +7,7 @@ import '../../../models/product_model.dart';
 
 Widget buildCart(Cart cart, Function set) {
   return StreamBuilder<Product>(
-      stream: CartController.cartProduct(cart.id),
+      stream: CartController.cartProduct(cart.productId),
       builder: (context, AsyncSnapshot<Product> snapshot) {
         if (snapshot.hasData) {
           return Row(
