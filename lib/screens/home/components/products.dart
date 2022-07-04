@@ -20,13 +20,13 @@ class _ProductsState extends State<Products> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SizedBox(
-            height: 200,
+            height: 700,
             child: GridView(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  mainAxisExtent: 160),
+                  mainAxisExtent: 300),
               children: snapshot.data!.map(buildProduct).toList(),
             ),
           );
@@ -49,23 +49,46 @@ class _ProductsState extends State<Products> {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => ProductDetails(product)));
       },
-      child: Column(
-        children: [
-          Hero(
-            tag: product.id,
-            child: Image.network(
-              product.imgPath,
-              height: 100,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 10,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Hero(
+              tag: product.id,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10)),
+                child: Image.network(
+                  product.imgPath,
+                  height: 140,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            product.name,
-            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-          )
-        ],
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              product.name,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              product.price,
+              style: TextStyle(fontSize: 18),
+            )
+          ],
+        ),
       ),
     );
   }
