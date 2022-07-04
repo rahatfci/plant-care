@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/cart_model.dart';
@@ -12,11 +14,23 @@ class CartController {
         (event) => event.docs.map((e) => Cart.fromJson(e.data())).toList());
   }
 
-  static Stream<Product> cartProduct(String productId) {
+  static Stream<List<Product>> cartProduct(String productId) {
     return FirebaseFirestore.instance
         .collection('products')
         .where('id', isEqualTo: productId)
         .snapshots()
-        .map((event) => Product.fromJson(event));
+        .map((event) =>
+            event.docs.map((e) => Product.fromJson(e.data())).toList());
+  }
+
+  static Future addToCart(String productId, int quantity, String userId) async {
+    dynamic dbRef = reference.doc();
+    Cart data = Cart(
+        id: dbRef.id, productId: productId, quantity: quantity, userId: userId);
+    await dbRef.set(data.toJson());
+  }
+
+  static Future removeCart(String id) async {
+    reference.doc(id).delete();
   }
 }

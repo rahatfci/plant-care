@@ -10,12 +10,12 @@ class Cart {
       required this.quantity,
       required this.userId});
 
-  Map<String, dynamic> toJson(Cart cart) {
+  Map<String, dynamic> toJson() {
     return {
-      'id': cart.id,
-      'productId': cart.productId,
-      'quantity': cart.quantity,
-      'userId': cart.userId,
+      'id': id,
+      'productId': productId,
+      'quantity': quantity,
+      'userId': userId,
     };
   }
 
