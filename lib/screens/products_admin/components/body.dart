@@ -16,14 +16,16 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
-  TextEditingController amount = TextEditingController();
+  TextEditingController quantity = TextEditingController();
   TextEditingController discount = TextEditingController();
+  TextEditingController category = TextEditingController();
   TextEditingController price = TextEditingController();
 
   TextEditingController nameAdd = TextEditingController();
   TextEditingController descriptionAdd = TextEditingController();
-  TextEditingController amountAdd = TextEditingController();
+  TextEditingController quantityAdd = TextEditingController();
   TextEditingController discountAdd = TextEditingController();
+  TextEditingController categoryAdd = TextEditingController();
   TextEditingController priceAdd = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
@@ -64,8 +66,13 @@ class _BodyState extends State<Body> {
                                       const SizedBox(
                                         height: 15,
                                       ),
-                                      formField(amountAdd, "Amount",
+                                      formField(quantityAdd, "Quantity",
                                           TextInputType.number),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      formField(categoryAdd, "Category",
+                                          TextInputType.text),
                                       const SizedBox(
                                         height: 15,
                                       ),
@@ -125,9 +132,11 @@ class _BodyState extends State<Body> {
                                                     name: nameAdd.text,
                                                     description:
                                                         descriptionAdd.text,
-                                                    amount: amountAdd.text,
+                                                    quantity: int.parse(
+                                                        quantityAdd.text),
                                                     discount: discountAdd.text,
                                                     price: priceAdd.text,
+                                                    category: categoryAdd,
                                                     context: context);
                                               },
                                               child: const Text('Submit')),
@@ -163,13 +172,13 @@ class _BodyState extends State<Body> {
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold))),
-                          // DataColumn(
-                          //     label: Text('Description',
-                          //         style: TextStyle(
-                          //             fontSize: 16,
-                          //             fontWeight: FontWeight.bold))),
                           DataColumn(
-                              label: Text('Amount',
+                              label: Text('Category',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold))),
+                          DataColumn(
+                              label: Text('Quantity',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold))),
@@ -198,8 +207,8 @@ class _BodyState extends State<Body> {
                             .map(
                               (e) => DataRow(cells: [
                                 DataCell(Text(e.name)),
-                                // DataCell(Text(e.description)),
-                                DataCell(Text(e.amount)),
+                                DataCell(Text(e.category)),
+                                DataCell(Text(e.quantity.toString())),
                                 DataCell(Text(e.discount)),
                                 DataCell(Text(e.price)),
                                 DataCell(Image.network(
@@ -220,9 +229,10 @@ class _BodyState extends State<Body> {
                                               UploadProduct(setState);
                                           name.text = e.name;
                                           description.text = e.description;
-                                          amount.text = e.amount;
+                                          quantity.text = e.quantity.toString();
                                           discount.text = e.discount;
                                           price.text = e.price;
+                                          category.text = e.category;
                                           showDialog(
                                               context: context,
                                               builder: (context) => Center(
@@ -264,10 +274,18 @@ class _BodyState extends State<Body> {
                                                                   height: 15,
                                                                 ),
                                                                 formField(
-                                                                    amount,
-                                                                    "Amount",
+                                                                    quantity,
+                                                                    "Quantity",
                                                                     TextInputType
                                                                         .number),
+                                                                const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                                formField(
+                                                                    category,
+                                                                    "Category",
+                                                                    TextInputType
+                                                                        .text),
                                                                 const SizedBox(
                                                                   height: 15,
                                                                 ),
@@ -352,10 +370,11 @@ class _BodyState extends State<Body> {
                                                                               id: e.id,
                                                                               name: name.text,
                                                                               description: description.text,
-                                                                              amount: amount.text,
+                                                                              quantity: int.parse(quantity.text),
                                                                               discount: discount.text,
                                                                               price: price.text,
                                                                               imgName: e.imgName,
+                                                                              category: category.text,
                                                                               context: context);
                                                                         },
                                                                         child: const Text(

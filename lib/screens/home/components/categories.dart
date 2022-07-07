@@ -20,7 +20,7 @@ class _CategoriesState extends State<Categories> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SizedBox(
-            height: 90,
+            height: 95,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: snapshot.data!.map(buildCategory).toList(),
@@ -49,26 +49,27 @@ class _CategoriesState extends State<Categories> {
         padding: const EdgeInsets.only(
           right: 15,
         ),
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color(0xffcdcdcd)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
           child: Column(
             children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                child: Image.network(
-                  category.imgPath,
-                  height: 60,
-                  fit: BoxFit.fill,
-                ),
+              Image.network(
+                category.imgPath,
+                height: 60,
+                fit: BoxFit.fill,
               ),
-              Text(
-                category.name,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              const SizedBox(
+                height: 5,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                color: const Color(0xffcdcdcd),
+                child: Text(
+                  category.name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 16),
+                ),
               )
             ],
           ),

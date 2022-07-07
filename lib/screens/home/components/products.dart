@@ -24,7 +24,7 @@ class _ProductsState extends State<Products> {
             child: GridView(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 10,
+                  crossAxisSpacing: 8,
                   mainAxisSpacing: 10,
                   mainAxisExtent: 300),
               children: snapshot.data!.map(buildProduct).toList(),
@@ -53,41 +53,45 @@ class _ProductsState extends State<Products> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        elevation: 10,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Hero(
-              tag: product.id,
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10)),
-                child: Image.network(
-                  product.imgPath,
-                  height: 140,
+        elevation: 6,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Hero(
+                tag: product.id,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10)),
+                  child: Image.network(
+                    product.imgPath,
+                    height: 140,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              product.name,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.black,
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              product.price,
-              style: TextStyle(fontSize: 18),
-            )
-          ],
+              Text(
+                product.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                product.price,
+                style: TextStyle(fontSize: 18),
+              )
+            ],
+          ),
         ),
       ),
     );

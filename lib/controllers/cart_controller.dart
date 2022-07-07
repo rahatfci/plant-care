@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/cart_model.dart';
 import '../models/product_model.dart';
@@ -10,8 +9,11 @@ class CartController {
       FirebaseFirestore.instance.collection('cart');
 
   static Stream<List<Cart>> allCart() {
-    return reference.snapshots().map(
-        (event) => event.docs.map((e) => Cart.fromJson(e.data())).toList());
+    return reference
+        .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map(
+            (event) => event.docs.map((e) => Cart.fromJson(e.data())).toList());
   }
 
   static Stream<List<Product>> cartProduct(String productId) {

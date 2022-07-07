@@ -166,25 +166,4 @@ class _ProductDetailsState extends State<ProductDetails> {
       drawerEnableOpenDragGesture: false,
     );
   }
-
-  int count = 01;
-  bool favorite = false;
-
-  TextStyle textStyle() {
-    return const TextStyle(height: 1.6);
-  }
-
-  void setCount(add) {
-    add
-        ? count++
-        : count > 1
-            ? count--
-            : count;
-    setState(() {});
-  }
-
-  void setFavorite() {
-    favorite = !favorite;
-    setState(() {});
-  }
 }

@@ -95,9 +95,10 @@ class UploadProduct {
   Future upload(
       {required String name,
       required String description,
-      required String amount,
+      required int quantity,
       required String discount,
       required String price,
+      required category,
       required BuildContext context}) async {
     if (_photo == null) {
       Future.error("Please select a valid picture");
@@ -119,11 +120,11 @@ class UploadProduct {
             name: name,
             imgPath: await ref.getDownloadURL(),
             description: description,
-            amount: amount,
+            quantity: quantity,
             discount: discount,
             price: price,
             imgName: fileName!,
-            category: "Test");
+            category: category);
 
         dbref.set(data.toJson());
         Navigator.pop(context);
@@ -138,11 +139,12 @@ class UploadProduct {
   Future edit(
       {required String name,
       required String description,
-      required String amount,
+      required int quantity,
       required String discount,
       required String price,
       required String imgName,
       required String id,
+      required String category,
       required BuildContext context}) async {
     if (_photo == null && imgName.isEmpty) {
       Future.error("Please select a valid picture");
@@ -165,11 +167,11 @@ class UploadProduct {
             name: name,
             imgPath: await ref.getDownloadURL(),
             description: description,
-            amount: amount,
+            quantity: quantity,
             discount: discount,
             price: price,
             imgName: fileName == null ? imgName : fileName!,
-            category: "Test");
+            category: category);
         DocumentReference dbref =
             FirebaseFirestore.instance.collection('products').doc(id);
 
