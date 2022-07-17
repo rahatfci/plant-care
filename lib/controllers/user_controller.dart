@@ -18,11 +18,8 @@ class UserController {
         event.docs.map((e) => UserCustom.fromJson(e.data())).toList());
   }
 
-  static Stream<UserCustom> loggedUser(String id) {
-    return reference
-        .doc(id)
-        .snapshots()
-        .map((event) => UserCustom.fromJson(event.data()));
+  static Future<UserCustom> loggedUser(String id) {
+    return reference.doc(id).get().then((value) => UserCustom.fromJson(value));
   }
 }
 
@@ -87,12 +84,7 @@ class UploadProfile {
     }
   }
 
-  Future upload(
-      {required String id,
-      required String userType,
-      String? address,
-      required int totalSaved,
-      required BuildContext context}) async {
+  Future edit({required String name, required BuildContext context}) async {
     showDialog(
         context: context,
         builder: (context) => const Center(
@@ -100,42 +92,9 @@ class UploadProfile {
               color: kPrimaryColor,
             )));
     try {
-      if (_photo != null) {
-        final ref =
-            FirebaseStorage.instance.ref().child('images/users/$fileName');
-        await ref.putFile(_photo!);
-        FirebaseAuth.instance.currentUser!
-            .updatePhotoURL(await ref.getDownloadURL());
-        FirebaseAuth.instance.currentUser!.reload();
-      }
-      dynamic dbref = FirebaseFirestore.instance.collection('users').doc(id);
-      dynamic data = UserCustom(
-          id: id,
-          userType: userType,
-          address: address,
-          createdAt: Timestamp.now(),
-          totalSaved: totalSaved);
-      dbref.set(data.toJson());
-      Navigator.pop(context);
-    } catch (e) {
-      Future.error(e.toString());
-    }
-    Navigator.pop(context);
-  }
+      FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+      FirebaseAuth.instance.currentUser!.reload();
 
-  Future edit(
-      {required String id,
-      required String userType,
-      String? address,
-      required int totalSaved,
-      required BuildContext context}) async {
-    showDialog(
-        context: context,
-        builder: (context) => const Center(
-                child: CircularProgressIndicator(
-              color: kPrimaryColor,
-            )));
-    try {
       if (_photo != null) {
         final ref =
             FirebaseStorage.instance.ref().child('images/users/$fileName');
@@ -144,18 +103,10 @@ class UploadProfile {
             .updatePhotoURL(await ref.getDownloadURL());
         FirebaseAuth.instance.currentUser!.reload();
       }
-      dynamic dbref = FirebaseFirestore.instance.collection('users').doc(id);
-      dynamic data = UserCustom(
-          id: id,
-          userType: userType,
-          address: address,
-          createdAt: Timestamp.now(),
-          totalSaved: totalSaved);
-      await dbref.update(data.toJson());
       Navigator.pop(context);
     } catch (e) {
+      Navigator.pop(context);
       Future.error(e.toString());
     }
-    Navigator.pop(context);
   }
 }

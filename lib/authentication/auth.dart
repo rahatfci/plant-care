@@ -45,7 +45,7 @@ signUpWithEmail(
     });
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
         (route) => false);
   } on FirebaseAuthException catch (e) {
     Navigator.pop(context);
@@ -80,7 +80,7 @@ Future<void> signInWithEmail({
     );
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
         (route) => false);
   } on FirebaseAuthException catch (e) {
     Navigator.pop(context);
@@ -134,7 +134,7 @@ signInWithGoogle(
           .set(userCustom.toJson());
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
           (route) => false);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -187,7 +187,7 @@ signInWithFacebook(BuildContext context) async {
         .set(userCustom.toJson());
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
         (route) => false);
   } on FirebaseAuthException catch (e) {
     Navigator.pop(context);
@@ -243,6 +243,7 @@ signOut(BuildContext context) async {
     }
 
     await _auth.signOut();
+    HomeScreen.selectedIndex = 0;
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const SignUpScreen()),

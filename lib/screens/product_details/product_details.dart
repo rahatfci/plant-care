@@ -25,139 +25,153 @@ class _ProductDetailsState extends State<ProductDetails> {
         alignment: Alignment.bottomCenter,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
           children: [
             Hero(
-                tag: widget.product.id,
-                child: Image.network(
-                  widget.product.imgPath,
-                )),
-            const SizedBox(
-              height: 20,
+              tag: widget.product.id,
+              child: Image.network(
+                widget.product.imgPath,
+                height: 300,
+              ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Price",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                        Text(
-                          widget.product.price,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 26),
-                        ),
-                      ]),
-                ),
-                const SizedBox(height: 15),
-                const Divider(
-                  thickness: 2,
-                  height: 0,
-                ),
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.only(
-                      top: 20, left: 20, right: 20, bottom: 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.product.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Column(
+            Expanded(
+              child: ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "Description",
+                            "Price",
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                                fontWeight: FontWeight.bold, fontSize: 18),
                           ),
-                          const SizedBox(
-                            height: 10,
+                          Text(
+                            widget.product.price,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 26),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Text(
-                              widget.product.description,
-                              style: TextStyle(
-                                  color: kTextColor.withOpacity(.8),
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          CartController.addToCart(widget.product.id, 1,
-                              FirebaseAuth.instance.currentUser!.uid);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ]),
+                  ),
+                  const SizedBox(height: 15),
+                  const Divider(
+                    thickness: 2,
+                    height: 0,
+                  ),
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.only(
+                        top: 20, left: 20, right: 20, bottom: 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            Expanded(
-                              child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                      color: kPrimaryColor,
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: const Text(
-                                    "Add to cart",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  )),
+                            const Text(
+                              "Name: ",
+                              style: TextStyle(fontSize: 18),
                             ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                      color: kPrimaryColor,
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: const Text(
-                                    "Buy now",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  )),
+                            Text(
+                              widget.product.name,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Description",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              height: 150,
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Text(
+                                    widget.product.description,
+                                    style: TextStyle(
+                                        overflow: TextOverflow.fade,
+                                        color: kTextColor.withOpacity(.8),
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            CartController.addToCart(widget.product.id, 1,
+                                FirebaseAuth.instance.currentUser!.uid);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    decoration: BoxDecoration(
+                                        color: kPrimaryColor,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: const Text(
+                                      "Add to cart",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    )),
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: Container(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    decoration: BoxDecoration(
+                                        color: kPrimaryColor,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: const Text(
+                                      "Buy now",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    )),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           ],
         ),

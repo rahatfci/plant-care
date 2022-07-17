@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plant_watch/components/bottom_nav.dart';
 
 import '../../components/app_bar.dart';
 import '../../components/nav_drawer.dart';
@@ -14,7 +13,7 @@ class SellerScreen extends StatelessWidget {
       key: scaffoldKey,
       appBar: buildAppBar(context, "Sellers", Icons.person, scaffoldKey),
       body: const Body(),
-      bottomNavigationBar: const MyBottomNavBar(),
+      //bottomNavigationBar: const MyBottomNavBar(),
       drawer: const NavigationDrawer(),
       drawerEnableOpenDragGesture: false,
     );

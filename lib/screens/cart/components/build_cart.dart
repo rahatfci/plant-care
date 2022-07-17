@@ -13,8 +13,7 @@ Widget buildCart(Cart cart, Function set) {
       builder: (context, AsyncSnapshot<List<Product>> snapshot) {
         if (snapshot.hasData) {
           Product product = snapshot.data![0];
-          Body.totalPrice = 0;
-          Body.totalPrice += cart.quantity * int.parse(product.price);
+          CartBody.totalPrice += cart.quantity * int.parse(product.price);
           return Card(
             elevation: 8,
             margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
@@ -63,6 +62,8 @@ Widget buildCart(Cart cart, Function set) {
                                         .doc(cart.id)
                                         .update(
                                             {'quantity': cart.quantity - 1});
+                                    CartBody.totalPrice -= cart.quantity *
+                                        int.parse(product.price);
                                     set(() {});
                                   }
                                 },
@@ -102,6 +103,8 @@ Widget buildCart(Cart cart, Function set) {
                                         .doc(cart.id)
                                         .update(
                                             {'quantity': cart.quantity + 1});
+                                    CartBody.totalPrice -= cart.quantity *
+                                        int.parse(product.price);
                                     set(() {});
                                   }
                                 },

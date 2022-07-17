@@ -32,13 +32,11 @@ class MyApp extends StatelessWidget {
               .textTheme
               .apply(bodyColor: kTextColor, fontFamily: 'Poppins'),
           visualDensity: VisualDensity.adaptivePlatformDensity),
-      home: GestureDetector(
-          child: FirebaseAuth.instance.currentUser == null
-              ? const SignUpScreen()
-              : HomeScreen(),
-          onTap: () => FocusManager.instance.primaryFocus!.unfocus()),
       routes: {
-        '/categories': (context) => CategoriesScreen(),
+        '/': (context) => FirebaseAuth.instance.currentUser == null
+            ? const SignUpScreen()
+            : const HomeScreen(),
+        '/categories': (context) => const CategoriesScreen(),
         '/cart': (context) => CartScreen(),
         '/settings': (context) => SettingsScreen(),
         '/categories_admin': (context) => const CategoriesAdminScreen(),

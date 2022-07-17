@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_watch/constants.dart';
+import 'package:plant_watch/screens/home/home_screen.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -15,9 +15,8 @@ class NavigationDrawer extends StatelessWidget {
           icon: Icons.home,
           text: "Home",
           onTap: () {
-            if (ModalRoute.of(context)!.settings.name != '/') {
-              Navigator.pushNamed(context, '/');
-            }
+            HomeScreen.selectedIndex = 0;
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
           },
         ),
         const Divider(),
@@ -43,34 +42,6 @@ class NavigationDrawer extends StatelessWidget {
           },
         ),
         const Divider(),
-        drawerBodyItem(
-          icon: Icons.shopping_cart,
-          text: 'Cart',
-          onTap: () {
-            Navigator.pop(context);
-            if (ModalRoute.of(context)!.settings.name != '/cart') {
-              Navigator.pushNamed(context, '/cart');
-            }
-          },
-        ),
-        const Divider(),
-        drawerBodyItem(
-          icon: Icons.account_circle,
-          text: 'Sellers',
-          onTap: () {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  "It's under construction. Stay tuned",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                backgroundColor: kPrimaryColor,
-              ),
-            );
-          },
-        ),
       ],
     ));
   }

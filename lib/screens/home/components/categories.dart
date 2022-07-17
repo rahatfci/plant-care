@@ -63,7 +63,12 @@ class _CategoriesState extends State<Categories> {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                color: const Color(0xffcdcdcd),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  color: Color(0xffcdcdcd),
+                ),
                 child: Text(
                   category.name,
                   textAlign: TextAlign.center,

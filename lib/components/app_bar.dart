@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_watch/screens/home/home_screen.dart';
 
 import '../authentication/auth.dart';
 import '../constants.dart';
@@ -53,15 +54,16 @@ AppBar buildAppBar(BuildContext context, String title, IconData icon,
     ),
     actions: <Widget>[
       IconButton(
-          icon: const Icon(
-            Icons.public,
-            size: 30,
-          ),
-          onPressed: () async {
-            if (ModalRoute.of(context)!.settings.name != '/') {
-              Navigator.pushNamed(context, '/');
-            }
-          }),
+        enableFeedback: false,
+        icon: const Icon(
+          Icons.public,
+          size: 30,
+        ),
+        onPressed: () {
+          HomeScreen.selectedIndex = 0;
+          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        },
+      ),
       IconButton(
           icon: const Icon(
             Icons.logout,

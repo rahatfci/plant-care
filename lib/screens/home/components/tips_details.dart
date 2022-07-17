@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/models/tips_model.dart';
 
@@ -10,7 +9,8 @@ Future tipsDetails(BuildContext context, Tip tip) {
       builder: (context) {
         return AlertDialog(
           title: Center(
-              child: Text(tip.title, style: TextStyle(color: kPrimaryColor))),
+              child: Text(tip.title,
+                  style: const TextStyle(color: kPrimaryColor))),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

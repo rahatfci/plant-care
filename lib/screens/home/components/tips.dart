@@ -76,8 +76,11 @@ class _TipsState extends State<Tips> {
               return Text('${snapshot.error}');
             } else {
               return const Center(
-                child: CircularProgressIndicator(
-                  color: kPrimaryColor,
+                child: SizedBox(
+                  width: 50,
+                  child: CircularProgressIndicator(
+                    color: kPrimaryColor,
+                  ),
                 ),
               );
             }

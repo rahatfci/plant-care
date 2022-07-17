@@ -26,6 +26,7 @@ class CartController {
   }
 
   static Future addToCart(String productId, int quantity, String userId) async {
+
     dynamic dbRef = reference.doc();
     Cart data = Cart(
         id: dbRef.id, productId: productId, quantity: quantity, userId: userId);

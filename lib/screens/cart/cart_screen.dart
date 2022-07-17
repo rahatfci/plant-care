@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plant_watch/components/bottom_nav.dart';
 
 import '../../components/app_bar.dart';
 import '../../components/nav_drawer.dart';
@@ -14,8 +13,8 @@ class CartScreen extends StatelessWidget {
       key: scaffoldKey,
       appBar: buildAppBar(
           context, "Cart", Icons.shopping_cart_outlined, scaffoldKey),
-      body: const Body(),
-      bottomNavigationBar: const MyBottomNavBar(),
+      body: const CartBody(),
+      //bottomNavigationBar: const MyBottomNavBar(),
       drawer: const NavigationDrawer(),
       drawerEnableOpenDragGesture: false,
     );

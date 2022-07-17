@@ -32,3 +32,68 @@ String? passwordValidator(String? password) {
   }
   return null;
 }
+
+String? profileNameValidator(String? name) {
+  if (name!.isEmpty) {
+    return "Name can't be Empty";
+  }
+  if (name.length >= 30) {
+    return "Name is too long";
+  }
+  return null;
+}
+
+String? categoryNameValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the name";
+  } else if (value.length > 15) {
+    return "Category name must be less than 15 character";
+  }
+  return null;
+}
+
+String? productNameValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the name";
+  } else if (value.length > 30) {
+    return "Product name must be less than 15 character";
+  }
+  return null;
+}
+
+String? productDescriptionValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the description";
+  }
+  return null;
+}
+
+String? productQuantityValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the quantity";
+  }
+  return null;
+}
+
+String? productCategoryValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the category name";
+  } else if (value.length > 15) {
+    return "Product name must be less than 15 character";
+  }
+  return null;
+}
+
+String? productDiscountValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the amount";
+  }
+  return null;
+}
+
+String? productPriceValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the amount";
+  }
+  return null;
+}

@@ -17,6 +17,11 @@ class ProductController {
         (event) => event.docs.map((e) => Product.fromJson(e.data())).toList());
   }
 
+  static Stream<List<Product>> topProduct() {
+    return reference.limit(6).snapshots().map(
+        (event) => event.docs.map((e) => Product.fromJson(e.data())).toList());
+  }
+
   static Stream<List<Product>> findProduct(String category) {
     return reference.where('category', isEqualTo: category).snapshots().map(
         (event) => event.docs.map((e) => Product.fromJson(e.data())).toList());
@@ -98,7 +103,7 @@ class UploadProduct {
       required int quantity,
       required String discount,
       required String price,
-      required category,
+      required String category,
       required BuildContext context}) async {
     if (_photo == null) {
       Future.error("Please select a valid picture");

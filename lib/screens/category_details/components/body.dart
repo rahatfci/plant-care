@@ -21,7 +21,7 @@ class _BodyState extends State<Body> {
         builder: (context, AsyncSnapshot<List<Product>> snapshot) {
           if (snapshot.hasData) {
             return GridView(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 10,
@@ -57,7 +57,7 @@ class _BodyState extends State<Body> {
               Hero(
                 tag: product.id,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(10),
                       topLeft: Radius.circular(10)),
                   child: Image.network(
@@ -83,7 +83,7 @@ class _BodyState extends State<Body> {
               ),
               Text(
                 product.price,
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               )
             ],
           ),

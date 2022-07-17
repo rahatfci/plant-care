@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plant_watch/components/bottom_nav.dart';
 
 import '../../components/app_bar.dart';
 import '../../components/nav_drawer.dart';
@@ -113,7 +112,7 @@ class _SellerDetailsState extends State<SellerDetails> {
       ),
       drawer: const NavigationDrawer(),
       drawerEnableOpenDragGesture: false,
-      bottomNavigationBar: const MyBottomNavBar(),
+      //bottomNavigationBar: const MyBottomNavBar(),
     );
   }
 

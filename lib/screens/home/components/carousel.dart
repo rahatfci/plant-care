@@ -42,8 +42,13 @@ class Carousel extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else {
-            return const CircularProgressIndicator(
-              color: kPrimaryColor,
+            return const Center(
+              child: SizedBox(
+                width: 50,
+                child: CircularProgressIndicator(
+                  color: kPrimaryColor,
+                ),
+              ),
             );
           }
         });
