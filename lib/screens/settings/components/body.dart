@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/models/user_model.dart';
@@ -32,12 +33,50 @@ class _SettingsBodyState extends State<SettingsBody> {
                       child: Column(
                         children: [
                           Center(
-                              child: CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  backgroundImage: NetworkImage(FirebaseAuth
-                                      .instance.currentUser!.photoURL!),
-                                  radius: 50)),
-                          const SizedBox(height: 15),
+                              child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedNetworkImage(
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.fill,
+                              imageUrl:
+                                  FirebaseAuth.instance.currentUser!.photoURL!,
+                              progressIndicatorBuilder: (BuildContext context,
+                                      String url, DownloadProgress progress) =>
+                                  Center(
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(
+                                      color: kPrimaryColor,
+                                      value: progress.progress),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.error,
+                                    color: kPrimaryColor,
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      error.toString(),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontSize: 10,
+                                          overflow: TextOverflow.fade),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                          const SizedBox(height: 5),
                           Text(
                             user.displayName!,
                             style: const TextStyle(
@@ -64,7 +103,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                             children: [
                               buildTile(
                                   "Total Order", 0xffdc9ba8, Icons.shopping_bag,
-                                  count: 5),
+                                  count: snapshot.data!.totalOrder),
                               buildTile(
                                   "Total Saved", 0xff92b2a7, Icons.local_offer,
                                   count: snapshot.data!.totalSaved),
@@ -74,8 +113,12 @@ class _SettingsBodyState extends State<SettingsBody> {
                                   },
                                   child: buildTile(
                                       "Edit Profile", 0xff63a3a8, Icons.edit)),
-                              buildTile(
-                                  "Help & Support", 0xffefbea3, Icons.support),
+                              GestureDetector(
+                                onTap: () =>
+                                    Navigator.pushNamed(context, '/support'),
+                                child: buildTile("Help & Support", 0xffefbea3,
+                                    Icons.support),
+                              ),
                               const SizedBox(
                                 height: 10,
                               )

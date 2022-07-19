@@ -127,40 +127,38 @@ class UploadCategory {
       {required String name,
       required String imgName,
       required String id,
+      required int color,
       required BuildContext context}) async {
-    if (_photo == null && imgName.isEmpty) {
-      Future.error("Please select a valid picture");
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => const Center(
-                  child: CircularProgressIndicator(
-                color: kPrimaryColor,
-              )));
-      try {
-        final ref =
-            FirebaseStorage.instance.ref().child('images/categories/$imgName');
-        if (fileName != null && fileName != imgName) {
-          await ref.delete();
-          await ref.putFile(_photo!);
-        }
-        Category editedProduct = Category(
-            id: id,
-            name: name,
-            imgPath: await ref.getDownloadURL(),
-            imgName: fileName == null ? imgName : fileName!,
-            color: await PaletteGenerator.fromImageProvider(FileImage(_photo!))
-                .then((value) => value.vibrantColor!.color.value));
-        DocumentReference dbref =
-            FirebaseFirestore.instance.collection('categories').doc(id);
-
-        await dbref.update(editedProduct.toJson());
-        Navigator.pop(context);
-        set(() {});
-      } catch (e) {
-        Future.error(e.toString());
+    showDialog(
+        context: context,
+        builder: (context) => const Center(
+                child: CircularProgressIndicator(
+              color: kPrimaryColor,
+            )));
+    try {
+      final ref =
+          FirebaseStorage.instance.ref().child('images/categories/$imgName');
+      if (fileName != null) {
+        await ref.delete();
+        await ref.putFile(_photo!);
       }
+      Category editedProduct = Category(
+          id: id,
+          name: name,
+          imgPath: await ref.getDownloadURL(),
+          imgName: fileName == null ? imgName : fileName!,
+          color: fileName == null
+              ? color
+              : await PaletteGenerator.fromImageProvider(FileImage(_photo!))
+                  .then((value) => value.vibrantColor!.color.value));
+      DocumentReference dbref =
+          FirebaseFirestore.instance.collection('categories').doc(id);
+      await dbref.update(editedProduct.toJson());
       Navigator.pop(context);
+      set(() {});
+    } catch (e) {
+      Future.error(e.toString());
     }
+    Navigator.pop(context);
   }
 }

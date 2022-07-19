@@ -4,18 +4,51 @@ import 'package:plant_watch/screens/cart/components/body.dart';
 import '../../../constants.dart';
 
 Widget priceDetails(Function set, BuildContext context) {
-  set(() {});
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      decoration: BoxDecoration(
-          color: kPrimaryColor, borderRadius: BorderRadius.circular(15)),
-      child: Text(
-        "Total Price - ${CartBody.totalPrice} tk",
-        style: const TextStyle(
-            color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      TextButton(
+          onPressed: () async {
+            set(() {});
+          },
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            primary: Colors.white,
+            backgroundColor: kPrimaryColor,
+          ),
+          child: Text(
+            "Total Price - ${CartBody.totalPrice / 2} tk",
+            style: const TextStyle(fontSize: 18, color: Colors.white),
+          )),
+      TextButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              dismissDirection: DismissDirection.startToEnd,
+              duration: Duration(milliseconds: 700),
+              content: Text(
+                "Its Under Development. Stay Tuned",
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              backgroundColor: kPrimaryColor,
+            ),
+          );
+        },
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          primary: Colors.white,
+          backgroundColor: kPrimaryColor,
+        ),
+        child: const Text(
+          "Buy Now",
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
       ),
-    ),
+    ],
   );
 }

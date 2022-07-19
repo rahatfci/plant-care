@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/constants.dart';
+import 'package:plant_watch/screens/carousel_admin/carousel_admin_screen.dart';
 import 'package:plant_watch/screens/cart/cart_screen.dart';
 import 'package:plant_watch/screens/categories/categories_screen.dart';
 import 'package:plant_watch/screens/categories_admin/categories_admin_screen.dart';
@@ -9,6 +10,8 @@ import 'package:plant_watch/screens/home/home_screen.dart';
 import 'package:plant_watch/screens/login_sign_up/sign_up_screen.dart';
 import 'package:plant_watch/screens/products_admin/products_admin_screen.dart';
 import 'package:plant_watch/screens/settings/settings_screen.dart';
+import 'package:plant_watch/screens/support/support_screen.dart';
+import 'package:plant_watch/screens/tips_admin/tips_admin_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +44,9 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => SettingsScreen(),
         '/categories_admin': (context) => const CategoriesAdminScreen(),
         '/products_admin': (context) => const ProductsAdminScreen(),
+        '/carousel_admin': (context) => const CarouselAdminScreen(),
+        '/tips_admin': (context) => const TipsAdminScreen(),
+        '/support': (context) => const SupportScreen(),
       },
     );
   }

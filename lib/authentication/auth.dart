@@ -11,7 +11,7 @@ import '../screens/home/home_screen.dart';
 
 CollectionReference reference = FirebaseFirestore.instance.collection('users');
 
-List<String> userType = ['admin', 'vendor', 'customer'];
+List<String> userType = ['admin', 'customer'];
 
 signUpWithEmail(
     {required String email,
@@ -38,7 +38,8 @@ signUpWithEmail(
           userType: userType[0],
           createdAt: Timestamp.now(),
           id: value.user!.uid,
-          totalSaved: 0);
+          totalSaved: 0,
+          totalOrder: 0);
       await reference
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set(userCustom.toJson());
@@ -124,11 +125,11 @@ signInWithGoogle(
         await userCredential.user!.linkWithCredential(authCredential!);
       }
       UserCustom userCustom = UserCustom(
-        userType: userType[1],
-        createdAt: Timestamp.now(),
-        id: FirebaseAuth.instance.currentUser!.uid,
-        totalSaved: 0,
-      );
+          userType: userType[1],
+          createdAt: Timestamp.now(),
+          id: FirebaseAuth.instance.currentUser!.uid,
+          totalSaved: 0,
+          totalOrder: 0);
       reference
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set(userCustom.toJson());
@@ -177,11 +178,11 @@ signInWithFacebook(BuildContext context) async {
   try {
     await FirebaseAuth.instance.signInWithCredential(credential);
     UserCustom userCustom = UserCustom(
-      userType: userType[1],
-      createdAt: Timestamp.now(),
-      id: FirebaseAuth.instance.currentUser!.uid,
-      totalSaved: 0,
-    );
+        userType: userType[1],
+        createdAt: Timestamp.now(),
+        id: FirebaseAuth.instance.currentUser!.uid,
+        totalSaved: 0,
+        totalOrder: 0);
     reference
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set(userCustom.toJson());

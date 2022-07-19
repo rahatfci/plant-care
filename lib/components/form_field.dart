@@ -23,6 +23,14 @@ Widget formField(TextEditingController controller, String label,
         borderRadius: BorderRadius.circular(5),
         borderSide: const BorderSide(width: 2.5, color: kPrimaryColor),
       ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: const BorderSide(width: 2.5, color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: const BorderSide(width: 2.5, color: kPrimaryColor),
+      ),
     ),
   );
 }

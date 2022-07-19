@@ -44,6 +44,9 @@ class _CartBodyState extends State<CartBody> {
           height: 10,
         ),
         priceDetails(setState, context),
+        const SizedBox(
+          height: 10,
+        ),
       ],
     );
   }

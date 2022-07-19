@@ -34,11 +34,29 @@ String? passwordValidator(String? password) {
 }
 
 String? profileNameValidator(String? name) {
-  if (name!.isEmpty) {
-    return "Name can't be Empty";
-  }
-  if (name.length >= 30) {
+  if (name!.length >= 30) {
     return "Name is too long";
+  }
+  return null;
+}
+
+String? carouselTitleValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the title";
+  }
+  return null;
+}
+
+String? carouselDescriptionValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the description";
+  }
+  return null;
+}
+
+String? carouselLinkValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the link";
   }
   return null;
 }

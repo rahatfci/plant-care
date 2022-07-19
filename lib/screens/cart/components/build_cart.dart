@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/controllers/cart_controller.dart';
@@ -24,7 +25,40 @@ Widget buildCart(Cart cart, Function set) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
-                    child: Image.network(product.imgPath),
+                    child: CachedNetworkImage(
+                      imageUrl: product.imgPath,
+                      progressIndicatorBuilder: (BuildContext context,
+                              String url, DownloadProgress progress) =>
+                          Center(
+                        child: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                              color: kPrimaryColor, value: progress.progress),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.error,
+                            color: kPrimaryColor,
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Expanded(
+                            child: Text(
+                              error.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 10, overflow: TextOverflow.fade),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                     flex: 2,
                   ),
                   const SizedBox(
@@ -57,13 +91,13 @@ Widget buildCart(Cart cart, Function set) {
                                 child: const Icon(Icons.remove),
                                 onTap: () {
                                   if (cart.quantity > 1) {
+                                    // CartBody.totalPrice -= cart.quantity *
+                                    //     int.parse(product.price);
                                     FirebaseFirestore.instance
                                         .collection('cart')
                                         .doc(cart.id)
                                         .update(
                                             {'quantity': cart.quantity - 1});
-                                    CartBody.totalPrice -= cart.quantity *
-                                        int.parse(product.price);
                                     set(() {});
                                   }
                                 },
@@ -103,8 +137,7 @@ Widget buildCart(Cart cart, Function set) {
                                         .doc(cart.id)
                                         .update(
                                             {'quantity': cart.quantity + 1});
-                                    CartBody.totalPrice -= cart.quantity *
-                                        int.parse(product.price);
+
                                     set(() {});
                                   }
                                 },

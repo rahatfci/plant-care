@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/authentication/form_validation.dart';
 import 'package:plant_watch/components/form_field.dart';
-import 'package:plant_watch/controllers/product_controller.dart';
+import 'package:plant_watch/controllers/carousel_controller.dart';
 
 import '../../../constants.dart';
-import '../../../models/product_model.dart';
+import '../../../models/carousel_model.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -16,19 +16,13 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  TextEditingController name = TextEditingController();
+  TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
-  TextEditingController quantity = TextEditingController();
-  TextEditingController discount = TextEditingController();
-  TextEditingController category = TextEditingController();
-  TextEditingController price = TextEditingController();
+  TextEditingController link = TextEditingController();
 
-  TextEditingController nameAdd = TextEditingController();
+  TextEditingController titleAdd = TextEditingController();
   TextEditingController descriptionAdd = TextEditingController();
-  TextEditingController quantityAdd = TextEditingController();
-  TextEditingController discountAdd = TextEditingController();
-  TextEditingController categoryAdd = TextEditingController();
-  TextEditingController priceAdd = TextEditingController();
+  TextEditingController linkAdd = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -42,13 +36,10 @@ class _BodyState extends State<Body> {
           children: [
             ElevatedButton(
               onPressed: () {
-                nameAdd.clear();
+                titleAdd.clear();
                 descriptionAdd.clear();
-                quantityAdd.clear();
-                discountAdd.clear();
-                categoryAdd.clear();
-                priceAdd.clear();
-                UploadProduct uploadProduct = UploadProduct(setState);
+                linkAdd.clear();
+                UploadCarousel uploadCarousel = UploadCarousel(setState);
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -61,7 +52,7 @@ class _BodyState extends State<Body> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                formField(nameAdd, "Name", TextInputType.name,
+                                formField(titleAdd, "Title", TextInputType.name,
                                     (value) => productNameValidator(value)),
                                 const SizedBox(
                                   height: 15,
@@ -75,35 +66,8 @@ class _BodyState extends State<Body> {
                                 const SizedBox(
                                   height: 15,
                                 ),
-                                formField(
-                                    quantityAdd,
-                                    "Quantity",
-                                    TextInputType.number,
+                                formField(linkAdd, "Link", TextInputType.url,
                                     (value) => productQuantityValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    categoryAdd,
-                                    "Category",
-                                    TextInputType.text,
-                                    (value) => productCategoryValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    priceAdd,
-                                    "Price",
-                                    TextInputType.number,
-                                    (value) => productPriceValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    discountAdd,
-                                    "Discount",
-                                    TextInputType.number,
-                                    (value) => productDiscountValidator(value)),
                                 const SizedBox(
                                   height: 15,
                                 ),
@@ -114,14 +78,14 @@ class _BodyState extends State<Body> {
                                         vertical: 10, horizontal: 8),
                                   ),
                                   onPressed: () {
-                                    uploadProduct.showPicker(context);
+                                    uploadCarousel.showPicker(context);
                                     setState(() {});
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        uploadProduct.fileName == null
+                                        uploadCarousel.fileName == null
                                             ? "Select Image"
                                             : "File Selected",
                                         style: const TextStyle(fontSize: 16),
@@ -145,21 +109,19 @@ class _BodyState extends State<Body> {
                                     primary: kPrimaryColor),
                                 onPressed: () async {
                                   if (formKey.currentState!.validate()) {
-                                    await uploadProduct.upload(
-                                        name: nameAdd.text,
-                                        description: descriptionAdd.text,
-                                        quantity: int.parse(quantityAdd.text),
-                                        discount: discountAdd.text,
-                                        price: priceAdd.text,
-                                        category: categoryAdd.text,
-                                        context: context);
+                                    await uploadCarousel.upload(
+                                      title: titleAdd.text,
+                                      description: descriptionAdd.text,
+                                      link: linkAdd.text,
+                                      context: context,
+                                    );
                                   }
                                 },
                                 child: const Text('Submit')),
                           ],
                         ));
               },
-              child: const Text("Add Product"),
+              child: const Text("Add Carousel"),
               style: ElevatedButton.styleFrom(
                 primary: kPrimaryColor,
               ),
@@ -167,8 +129,8 @@ class _BodyState extends State<Body> {
             const SizedBox(
               height: 8,
             ),
-            StreamBuilder<List<Product>>(
-              stream: ProductController.allProduct(),
+            StreamBuilder<List<CarouselCustom>>(
+              stream: CarouselControllerCustom.allCarousel(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return SingleChildScrollView(
@@ -177,27 +139,12 @@ class _BodyState extends State<Body> {
                         border: TableBorder.all(),
                         columns: const [
                           DataColumn(
-                              label: Text('Name',
+                              label: Text('Title',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold))),
                           DataColumn(
-                              label: Text('Category',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold))),
-                          DataColumn(
-                              label: Text('Quantity',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold))),
-                          DataColumn(
-                              label: Text('Discount',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold))),
-                          DataColumn(
-                              label: Text('Price',
+                              label: Text('Link',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold))),
@@ -215,11 +162,8 @@ class _BodyState extends State<Body> {
                         rows: snapshot.data!
                             .map(
                               (e) => DataRow(cells: [
-                                DataCell(Text(e.name)),
-                                DataCell(Text(e.category)),
-                                DataCell(Text(e.quantity.toString())),
-                                DataCell(Text(e.discount)),
-                                DataCell(Text(e.price)),
+                                DataCell(Text(e.title)),
+                                DataCell(Text(e.link)),
                                 DataCell(CachedNetworkImage(
                                   imageUrl: e.imgPath,
                                   width: 60,
@@ -268,14 +212,11 @@ class _BodyState extends State<Body> {
                                           size: 30,
                                         ),
                                         onPressed: () {
-                                          UploadProduct uploadEditProduct =
-                                              UploadProduct(setState);
-                                          name.text = e.name;
+                                          UploadCarousel uploadEditCarousel =
+                                              UploadCarousel(setState);
+                                          title.text = e.title;
                                           description.text = e.description;
-                                          quantity.text = e.quantity.toString();
-                                          discount.text = e.discount;
-                                          price.text = e.price;
-                                          category.text = e.category;
+                                          link.text = e.link;
                                           showDialog(
                                             context: context,
                                             builder: (context) => AlertDialog(
@@ -296,11 +237,11 @@ class _BodyState extends State<Body> {
                                                         MainAxisSize.min,
                                                     children: [
                                                       formField(
-                                                          name,
-                                                          "Name",
+                                                          title,
+                                                          "Title",
                                                           TextInputType.name,
                                                           (value) =>
-                                                              productNameValidator(
+                                                              carouselTitleValidator(
                                                                   value)),
                                                       const SizedBox(
                                                         height: 15,
@@ -310,47 +251,17 @@ class _BodyState extends State<Body> {
                                                           "Description",
                                                           TextInputType.text,
                                                           (value) =>
-                                                              productDescriptionValidator(
+                                                              carouselDescriptionValidator(
                                                                   value)),
                                                       const SizedBox(
                                                         height: 15,
                                                       ),
                                                       formField(
-                                                          quantity,
-                                                          "Quantity",
-                                                          TextInputType.number,
+                                                          link,
+                                                          "Link",
+                                                          TextInputType.url,
                                                           (value) =>
-                                                              productQuantityValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          category,
-                                                          "Category",
-                                                          TextInputType.text,
-                                                          (value) =>
-                                                              productCategoryValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          price,
-                                                          "Price",
-                                                          TextInputType.number,
-                                                          (value) =>
-                                                              productPriceValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          discount,
-                                                          "Discount",
-                                                          TextInputType.number,
-                                                          (value) =>
-                                                              productDiscountValidator(
+                                                              carouselLinkValidator(
                                                                   value)),
                                                       const SizedBox(
                                                         height: 15,
@@ -368,7 +279,7 @@ class _BodyState extends State<Body> {
                                                                       8),
                                                         ),
                                                         onPressed: () {
-                                                          uploadEditProduct
+                                                          uploadEditCarousel
                                                               .showPicker(
                                                                   context);
                                                           setState(() {});
@@ -413,29 +324,19 @@ class _BodyState extends State<Body> {
                                                     onPressed: () async {
                                                       if (formKey.currentState!
                                                           .validate()) {
-                                                        await uploadEditProduct
+                                                        await uploadEditCarousel
                                                             .edit(
                                                                 id: e.id,
-                                                                name: name.text,
+                                                                title:
+                                                                    title.text,
                                                                 description:
                                                                     description
                                                                         .text,
-                                                                quantity:
-                                                                    int.parse(
-                                                                        quantity
-                                                                            .text),
-                                                                discount:
-                                                                    discount
-                                                                        .text,
-                                                                price:
-                                                                    price.text,
-                                                                imgName:
-                                                                    e.imgName,
-                                                                category:
-                                                                    category
-                                                                        .text,
+                                                                link: link.text,
                                                                 context:
-                                                                    context);
+                                                                    context,
+                                                                imgName:
+                                                                    e.imgName);
                                                       }
                                                     },
                                                     child:
@@ -502,7 +403,7 @@ class _BodyState extends State<Body> {
                                                           await FirebaseFirestore
                                                               .instance
                                                               .collection(
-                                                                  "products")
+                                                                  "carousel")
                                                               .doc(e.id)
                                                               .delete()
                                                               .then((value) {
@@ -513,7 +414,7 @@ class _BodyState extends State<Body> {
                                                                 .showSnackBar(
                                                               const SnackBar(
                                                                 content: Text(
-                                                                  "The product deleted successfully",
+                                                                  "The carousel deleted successfully",
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           18),

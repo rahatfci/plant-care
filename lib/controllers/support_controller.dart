@@ -1,37 +1,28 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 import '../constants.dart';
-import '../models/tips_model.dart';
+import '../models/support_model.dart';
 
-class TipsController {
+class SupportController {
   static final CollectionReference reference =
-      FirebaseFirestore.instance.collection('tip');
-  static Stream<List<Tip>> allTip() {
-    return reference
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((event) => event.docs.map((e) => Tip.fromJson(e.data())).toList());
-  }
-
-  static Stream<List<Tip>> topTip() {
-    return reference
-        .orderBy('createdAt', descending: true)
-        .limit(1)
-        .snapshots()
-        .map((event) => event.docs.map((e) => Tip.fromJson(e.data())).toList());
+      FirebaseFirestore.instance.collection('support_tickets');
+  static Stream<List<Support>> allSupportTickets(String id) {
+    return reference.where('userId', isEqualTo: id).snapshots().map(
+        (event) => event.docs.map((e) => Support.fromJson(e.data())).toList());
   }
 }
 
-class UploadTips {
+class UploadSupportTickets {
   Function set;
 
-  UploadTips(this.set);
+  UploadSupportTickets(this.set);
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -111,17 +102,20 @@ class UploadTips {
                 color: kPrimaryColor,
               )));
       try {
-        final ref =
-            FirebaseStorage.instance.ref().child('images/tips/$fileName');
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('images/support_tickets/$fileName');
         await ref.putFile(_photo!);
-        dynamic dbref = FirebaseFirestore.instance.collection('tip').doc();
+        dynamic dbref =
+            FirebaseFirestore.instance.collection('support_tickets').doc();
 
-        dynamic data = Tip(
+        dynamic data = Support(
             id: dbref.id,
             title: title,
             imgName: fileName!,
             imgPath: await ref.getDownloadURL(),
             description: description,
+            userId: FirebaseAuth.instance.currentUser!.uid,
             createdAt: Timestamp.now());
 
         dbref.set(data.toJson());
@@ -147,17 +141,20 @@ class UploadTips {
               color: kPrimaryColor,
             )));
     try {
-      final ref = FirebaseStorage.instance.ref().child('images/tips/$imgName');
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('images/support_tickets/$imgName');
       if (fileName != null) {
         await ref.delete();
         await ref.putFile(_photo!);
       }
-      Tip data = Tip(
+      Support data = Support(
           id: id,
           title: title,
           imgPath: await ref.getDownloadURL(),
           description: description,
           imgName: fileName == null ? imgName : fileName!,
+          userId: FirebaseAuth.instance.currentUser!.uid,
           createdAt: Timestamp.now());
       DocumentReference dbref =
           FirebaseFirestore.instance.collection('tip').doc(id);

@@ -98,6 +98,7 @@ class UploadProfile {
       if (_photo != null) {
         final ref =
             FirebaseStorage.instance.ref().child('images/users/$fileName');
+        await ref.delete();
         await ref.putFile(_photo!);
         FirebaseAuth.instance.currentUser!
             .updatePhotoURL(await ref.getDownloadURL());

@@ -26,7 +26,7 @@ class _CarouselDetailsState extends State<CarouselDetails> {
           children: [
             Hero(
               tag: widget.carousel.id,
-              child: Image.asset(
+              child: Image.network(
                 widget.carousel.imgPath,
                 height: 300,
               ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/authentication/form_validation.dart';
@@ -30,6 +31,7 @@ class _BodyState extends State<Body> {
           children: [
             ElevatedButton(
               onPressed: () {
+                nameAdd.clear();
                 UploadCategory uploadCategory = UploadCategory(setState);
                 showDialog(
                     context: context,
@@ -131,9 +133,45 @@ class _BodyState extends State<Body> {
                               .map(
                                 (e) => DataRow(cells: [
                                   DataCell(Text(e.name)),
-                                  DataCell(Image.network(
-                                    e.imgPath,
+                                  DataCell(CachedNetworkImage(
+                                    imageUrl: e.imgPath,
                                     width: 60,
+                                    progressIndicatorBuilder:
+                                        (BuildContext context, String url,
+                                                DownloadProgress progress) =>
+                                            Center(
+                                      child: SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: CircularProgressIndicator(
+                                            color: kPrimaryColor,
+                                            value: progress.progress),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(
+                                          Icons.error,
+                                          color: kPrimaryColor,
+                                        ),
+                                        const SizedBox(
+                                          height: 3,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            error.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                fontSize: 10,
+                                                overflow: TextOverflow.fade),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   )),
                                   DataCell(
                                     Row(
@@ -238,6 +276,8 @@ class _BodyState extends State<Body> {
                                                               .edit(
                                                                   name:
                                                                       name.text,
+                                                                  color:
+                                                                      e.color,
                                                                   context:
                                                                       context,
                                                                   imgName:

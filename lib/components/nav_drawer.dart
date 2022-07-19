@@ -42,6 +42,28 @@ class NavigationDrawer extends StatelessWidget {
           },
         ),
         const Divider(),
+        drawerBodyItem(
+          icon: Icons.image,
+          text: 'Carousel',
+          onTap: () {
+            Navigator.pop(context);
+            if (ModalRoute.of(context)!.settings.name != '/carousel_admin') {
+              Navigator.pushNamed(context, '/carousel_admin');
+            }
+          },
+        ),
+        const Divider(),
+        drawerBodyItem(
+          icon: Icons.lightbulb,
+          text: 'Tips',
+          onTap: () {
+            Navigator.pop(context);
+            if (ModalRoute.of(context)!.settings.name != '/tips_admin') {
+              Navigator.pushNamed(context, '/tips_admin');
+            }
+          },
+        ),
+        const Divider(),
       ],
     ));
   }

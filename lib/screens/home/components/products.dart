@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/constants.dart';
 
 import '../../../controllers/product_controller.dart';
 import '../../../models/product_model.dart';
 import '../../product_details/product_details.dart';
+import '../home_screen.dart';
 
 class Products extends StatefulWidget {
   const Products({Key? key}) : super(key: key);
@@ -37,12 +40,43 @@ class _ProductsState extends State<Products> {
                 ),
                 buildProduct(snapshot.data![3]),
               ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                buildProduct(snapshot.data![4]),
+                const SizedBox(
+                  width: 8,
+                ),
+                buildProduct(snapshot.data![5]),
+              ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                buildProduct(snapshot.data![6]),
+                const SizedBox(
+                  width: 8,
+                ),
+                buildProduct(snapshot.data![7]),
+              ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                buildProduct(snapshot.data![8]),
+                const SizedBox(
+                  width: 8,
+                ),
+                buildProduct(snapshot.data![9]),
+              ]),
               const SizedBox(
                 height: 10,
               ),
               ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/categories'),
-                child: const Text("Show Category Wise Products"),
+                onPressed: () {
+                  HomeScreen.selectedIndex = 1;
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/', (route) => false);
+                },
+                child: const Text(
+                  "Show Category Wise Products",
+                  style: TextStyle(fontSize: 15),
+                ),
                 style: ElevatedButton.styleFrom(primary: kPrimaryColor),
               )
             ],
@@ -62,7 +96,8 @@ class _ProductsState extends State<Products> {
 
   Widget buildProduct(Product product) {
     return SizedBox(
-      height: 280,
+      height: 300,
+      width: MediaQuery.of(context).size.width / 2.2,
       child: GestureDetector(
         onTap: () {
           Navigator.push(context,
@@ -76,6 +111,7 @@ class _ProductsState extends State<Products> {
           child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Hero(
                   tag: product.id,
@@ -83,10 +119,40 @@ class _ProductsState extends State<Products> {
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(10),
                         topLeft: Radius.circular(10)),
-                    child: Image.network(
-                      product.imgPath,
+                    child: CachedNetworkImage(
+                      imageUrl: product.imgPath,
                       height: 140,
-                      width: MediaQuery.of(context).size.width / 2.5,
+                      progressIndicatorBuilder: (BuildContext context,
+                              String url, DownloadProgress progress) =>
+                          Center(
+                        child: SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: CircularProgressIndicator(
+                              color: kPrimaryColor, value: progress.progress),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.error,
+                            color: kPrimaryColor,
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Expanded(
+                            child: Text(
+                              error.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 12, overflow: TextOverflow.fade),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -98,16 +164,30 @@ class _ProductsState extends State<Products> {
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 15,
                     color: Colors.black,
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 8,
                 ),
                 Text(
                   product.price,
-                  style: const TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Expanded(
+                  child: Text(
+                    product.description,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.fade,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
                 )
               ],
             ),

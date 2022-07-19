@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/controllers/cart_controller.dart';
@@ -16,6 +17,10 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  Widget addToCart = const Text(
+    "Add to cart",
+    style: TextStyle(fontSize: 18, color: Colors.white),
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +33,40 @@ class _ProductDetailsState extends State<ProductDetails> {
           children: [
             Hero(
               tag: widget.product.id,
-              child: Image.network(
-                widget.product.imgPath,
+              child: CachedNetworkImage(
+                imageUrl: widget.product.imgPath,
                 height: 300,
+                progressIndicatorBuilder: (BuildContext context, String url,
+                        DownloadProgress progress) =>
+                    Center(
+                  child: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: CircularProgressIndicator(
+                        color: kPrimaryColor, value: progress.progress),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error,
+                      color: kPrimaryColor,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Expanded(
+                      child: Text(
+                        error.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 12, overflow: TextOverflow.fade),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -116,53 +152,78 @@ class _ProductDetailsState extends State<ProductDetails> {
                         const SizedBox(
                           height: 10,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            CartController.addToCart(widget.product.id, 1,
-                                FirebaseAuth.instance.currentUser!.uid);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    decoration: BoxDecoration(
-                                        color: kPrimaryColor,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: const Text(
-                                      "Add to cart",
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  addToCart = const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                });
+                                await CartController.addToCart(
+                                    widget.product.id,
+                                    1,
+                                    FirebaseAuth.instance.currentUser!.uid);
+                                setState(() {
+                                  addToCart = const Text(
+                                    "Added to Cart",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  );
+                                });
+                              },
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 6),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                primary: Colors.white,
+                                backgroundColor: kPrimaryColor,
+                              ),
+                              child: addToCart,
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    dismissDirection:
+                                        DismissDirection.startToEnd,
+                                    duration: Duration(milliseconds: 700),
+                                    content: Text(
+                                      "Its Under Development. Stay Tuned",
+                                      style: TextStyle(fontSize: 16),
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    )),
+                                    ),
+                                    backgroundColor: kPrimaryColor,
+                                  ),
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 6),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                primary: Colors.white,
+                                backgroundColor: kPrimaryColor,
                               ),
-                              const SizedBox(
-                                width: 15,
+                              child: const Text(
+                                "Buy Now",
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
                               ),
-                              Expanded(
-                                child: Container(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    decoration: BoxDecoration(
-                                        color: kPrimaryColor,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: const Text(
-                                      "Buy now",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    )),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
                           height: 10,

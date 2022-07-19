@@ -3,32 +3,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserCustom {
   String id;
   String userType;
-  String? address;
   Timestamp createdAt;
   int totalSaved;
+  int totalOrder;
   UserCustom(
       {required this.userType,
-      this.address,
       required this.createdAt,
       required this.id,
-      required this.totalSaved});
+      required this.totalSaved,
+      required this.totalOrder});
 
   Map<String, dynamic> toJson() {
     return {
       'userType': userType,
-      'address': address,
       'createdAt': createdAt,
       'id': id,
-      'totalSaved': totalSaved
+      'totalSaved': totalSaved,
+      'totalOrder': totalOrder,
     };
   }
 
   static UserCustom fromJson(data) {
     return UserCustom(
-        id: data['id'],
-        userType: data['userType'],
-        address: data['address'],
-        createdAt: data['createdAt'],
-        totalSaved: data['totalSaved']);
+      id: data['id'],
+      userType: data['userType'],
+      createdAt: data['createdAt'],
+      totalSaved: data['totalSaved'],
+      totalOrder: data['totalOrder'],
+    );
   }
 }

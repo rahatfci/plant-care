@@ -18,7 +18,7 @@ class ProductController {
   }
 
   static Stream<List<Product>> topProduct() {
-    return reference.limit(6).snapshots().map(
+    return reference.limit(10).snapshots().map(
         (event) => event.docs.map((e) => Product.fromJson(e.data())).toList());
   }
 
@@ -151,42 +151,38 @@ class UploadProduct {
       required String id,
       required String category,
       required BuildContext context}) async {
-    if (_photo == null && imgName.isEmpty) {
-      Future.error("Please select a valid picture");
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => const Center(
-                  child: CircularProgressIndicator(
-                color: kPrimaryColor,
-              )));
-      try {
-        final ref =
-            FirebaseStorage.instance.ref().child('images/products/$imgName');
-        if (fileName != null && fileName != imgName) {
-          await ref.delete();
-          await ref.putFile(_photo!);
-        }
-        Product editedProduct = Product(
-            id: id,
-            name: name,
-            imgPath: await ref.getDownloadURL(),
-            description: description,
-            quantity: quantity,
-            discount: discount,
-            price: price,
-            imgName: fileName == null ? imgName : fileName!,
-            category: category);
-        DocumentReference dbref =
-            FirebaseFirestore.instance.collection('products').doc(id);
-
-        await dbref.update(editedProduct.toJson());
-        Navigator.pop(context);
-        set(() {});
-      } catch (e) {
-        Future.error(e.toString());
+    showDialog(
+        context: context,
+        builder: (context) => const Center(
+                child: CircularProgressIndicator(
+              color: kPrimaryColor,
+            )));
+    try {
+      final ref =
+          FirebaseStorage.instance.ref().child('images/products/$imgName');
+      if (fileName != null) {
+        await ref.delete();
+        await ref.putFile(_photo!);
       }
+      Product editedProduct = Product(
+          id: id,
+          name: name,
+          imgPath: await ref.getDownloadURL(),
+          description: description,
+          quantity: quantity,
+          discount: discount,
+          price: price,
+          imgName: fileName == null ? imgName : fileName!,
+          category: category);
+      DocumentReference dbref =
+          FirebaseFirestore.instance.collection('products').doc(id);
+
+      await dbref.update(editedProduct.toJson());
       Navigator.pop(context);
+      set(() {});
+    } catch (e) {
+      Future.error(e.toString());
     }
+    Navigator.pop(context);
   }
 }
