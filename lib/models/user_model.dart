@@ -6,12 +6,14 @@ class UserCustom {
   Timestamp createdAt;
   int totalSaved;
   int totalOrder;
+  String imgName;
   UserCustom(
       {required this.userType,
       required this.createdAt,
       required this.id,
       required this.totalSaved,
-      required this.totalOrder});
+      required this.totalOrder,
+      required this.imgName});
 
   Map<String, dynamic> toJson() {
     return {
@@ -20,16 +22,17 @@ class UserCustom {
       'id': id,
       'totalSaved': totalSaved,
       'totalOrder': totalOrder,
+      'imgName': imgName
     };
   }
 
   static UserCustom fromJson(data) {
     return UserCustom(
-      id: data['id'],
-      userType: data['userType'],
-      createdAt: data['createdAt'],
-      totalSaved: data['totalSaved'],
-      totalOrder: data['totalOrder'],
-    );
+        id: data['id'],
+        userType: data['userType'],
+        createdAt: data['createdAt'],
+        totalSaved: data['totalSaved'],
+        totalOrder: data['totalOrder'],
+        imgName: data['imgName']);
   }
 }

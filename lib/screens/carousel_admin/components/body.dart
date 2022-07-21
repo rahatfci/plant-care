@@ -10,7 +10,7 @@ import '../../../models/carousel_model.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
-
+  static String imageName = "Select Image";
   @override
   State<Body> createState() => _BodyState();
 }
@@ -39,86 +39,99 @@ class _BodyState extends State<Body> {
                 titleAdd.clear();
                 descriptionAdd.clear();
                 linkAdd.clear();
-                UploadCarousel uploadCarousel = UploadCarousel(setState);
+                Body.imageName = "Select Image";
+                UploadCarousel uploadCarousel = UploadCarousel();
                 showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                          scrollable: true,
-                          contentPadding: const EdgeInsets.only(
-                              left: 10, right: 10, top: 20, bottom: 10),
-                          actionsAlignment: MainAxisAlignment.spaceEvenly,
-                          content: Form(
-                            key: formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                formField(titleAdd, "Title", TextInputType.name,
-                                    (value) => productNameValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    descriptionAdd,
-                                    "Description",
-                                    TextInputType.text,
-                                    (value) =>
-                                        productDescriptionValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(linkAdd, "Link", TextInputType.url,
-                                    (value) => productQuantityValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 8),
+                    builder: (context) => StatefulBuilder(
+                          builder: (context, setState) => AlertDialog(
+                            scrollable: true,
+                            contentPadding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 20, bottom: 10),
+                            actionsAlignment: MainAxisAlignment.spaceEvenly,
+                            content: Form(
+                              key: formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  formField(
+                                      titleAdd,
+                                      "Title",
+                                      TextInputType.name,
+                                      (value) => productNameValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                  onPressed: () {
-                                    uploadCarousel.showPicker(context);
-                                    setState(() {});
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        uploadCarousel.fileName == null
-                                            ? "Select Image"
-                                            : "File Selected",
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                    ],
+                                  formField(
+                                      descriptionAdd,
+                                      "Description",
+                                      TextInputType.text,
+                                      (value) =>
+                                          productDescriptionValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                ),
-                              ],
+                                  formField(
+                                      linkAdd,
+                                      "Link",
+                                      TextInputType.url,
+                                      (value) =>
+                                          productQuantityValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14, horizontal: 8),
+                                    ),
+                                    onPressed: () {
+                                      uploadCarousel.showPicker(
+                                          context, setState);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            Body.imageName,
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                            actions: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Cancel')),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor),
+                                  onPressed: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      await uploadCarousel.upload(
+                                        title: titleAdd.text,
+                                        description: descriptionAdd.text,
+                                        link: linkAdd.text,
+                                        context: context,
+                                      );
+                                    }
+                                  },
+                                  child: const Text('Submit')),
+                            ],
                           ),
-                          actions: [
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Cancel')),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor),
-                                onPressed: () async {
-                                  if (formKey.currentState!.validate()) {
-                                    await uploadCarousel.upload(
-                                      title: titleAdd.text,
-                                      description: descriptionAdd.text,
-                                      link: linkAdd.text,
-                                      context: context,
-                                    );
-                                  }
-                                },
-                                child: const Text('Submit')),
-                          ],
                         ));
               },
               child: const Text("Add Carousel"),
@@ -213,135 +226,146 @@ class _BodyState extends State<Body> {
                                         ),
                                         onPressed: () {
                                           UploadCarousel uploadEditCarousel =
-                                              UploadCarousel(setState);
+                                              UploadCarousel();
                                           title.text = e.title;
                                           description.text = e.description;
                                           link.text = e.link;
+                                          Body.imageName = e.imgName;
                                           showDialog(
                                             context: context,
-                                            builder: (context) => AlertDialog(
-                                              scrollable: true,
-                                              contentPadding:
-                                                  const EdgeInsets.only(
-                                                      left: 10,
-                                                      right: 10,
-                                                      top: 20,
-                                                      bottom: 10),
-                                              actionsAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              content: Form(
-                                                key: formKey,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      formField(
-                                                          title,
-                                                          "Title",
-                                                          TextInputType.name,
-                                                          (value) =>
-                                                              carouselTitleValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          description,
-                                                          "Description",
-                                                          TextInputType.text,
-                                                          (value) =>
-                                                              carouselDescriptionValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          link,
-                                                          "Link",
-                                                          TextInputType.url,
-                                                          (value) =>
-                                                              carouselLinkValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          primary:
-                                                              kPrimaryColor,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical: 10,
-                                                                  horizontal:
-                                                                      8),
+                                            builder: (context) =>
+                                                StatefulBuilder(
+                                              builder: (context, setState) =>
+                                                  AlertDialog(
+                                                scrollable: true,
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        left: 10,
+                                                        right: 10,
+                                                        top: 20,
+                                                        bottom: 10),
+                                                actionsAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                content: Form(
+                                                  key: formKey,
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        formField(
+                                                            title,
+                                                            "Title",
+                                                            TextInputType.name,
+                                                            (value) =>
+                                                                carouselTitleValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
                                                         ),
-                                                        onPressed: () {
-                                                          uploadEditCarousel
-                                                              .showPicker(
-                                                                  context);
-                                                          setState(() {});
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Text(
-                                                                e.imgName,
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            16),
+                                                        formField(
+                                                            description,
+                                                            "Description",
+                                                            TextInputType.text,
+                                                            (value) =>
+                                                                carouselDescriptionValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        formField(
+                                                            link,
+                                                            "Link",
+                                                            TextInputType.url,
+                                                            (value) =>
+                                                                carouselLinkValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            primary:
+                                                                kPrimaryColor,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        14,
+                                                                    horizontal:
+                                                                        8),
+                                                          ),
+                                                          onPressed: () {
+                                                            uploadEditCarousel
+                                                                .showPicker(
+                                                                    context,
+                                                                    setState);
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Text(
+                                                                  Body.imageName,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
+                                                actions: [
+                                                  ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              primary:
+                                                                  kPrimaryColor),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('Cancel')),
+                                                  ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              primary:
+                                                                  kPrimaryColor),
+                                                      onPressed: () async {
+                                                        if (formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          await uploadEditCarousel
+                                                              .edit(
+                                                                  id: e.id,
+                                                                  title: title
+                                                                      .text,
+                                                                  description:
+                                                                      description
+                                                                          .text,
+                                                                  link:
+                                                                      link.text,
+                                                                  context:
+                                                                      context,
+                                                                  imgName: e
+                                                                      .imgName);
+                                                        }
+                                                      },
+                                                      child:
+                                                          const Text('Submit')),
+                                                ],
                                               ),
-                                              actions: [
-                                                ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            primary:
-                                                                kPrimaryColor),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child:
-                                                        const Text('Cancel')),
-                                                ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            primary:
-                                                                kPrimaryColor),
-                                                    onPressed: () async {
-                                                      if (formKey.currentState!
-                                                          .validate()) {
-                                                        await uploadEditCarousel
-                                                            .edit(
-                                                                id: e.id,
-                                                                title:
-                                                                    title.text,
-                                                                description:
-                                                                    description
-                                                                        .text,
-                                                                link: link.text,
-                                                                context:
-                                                                    context,
-                                                                imgName:
-                                                                    e.imgName);
-                                                      }
-                                                    },
-                                                    child:
-                                                        const Text('Submit')),
-                                              ],
                                             ),
                                           );
                                         },
@@ -413,6 +437,9 @@ class _BodyState extends State<Body> {
                                                                     .of(context)
                                                                 .showSnackBar(
                                                               const SnackBar(
+                                                                duration: Duration(
+                                                                    milliseconds:
+                                                                        700),
                                                                 content: Text(
                                                                   "The carousel deleted successfully",
                                                                   style: TextStyle(

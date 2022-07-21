@@ -19,7 +19,7 @@ Widget priceDetails(Function set, BuildContext context) {
             backgroundColor: kPrimaryColor,
           ),
           child: Text(
-            "Total Price - ${CartBody.totalPrice / 2} tk",
+            "Total Price - ${CartBody.totalPrice} tk",
             style: const TextStyle(fontSize: 18, color: Colors.white),
           )),
       TextButton(
@@ -45,7 +45,7 @@ Widget priceDetails(Function set, BuildContext context) {
           backgroundColor: kPrimaryColor,
         ),
         child: const Text(
-          "Buy Now",
+          "Buy",
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),
       ),

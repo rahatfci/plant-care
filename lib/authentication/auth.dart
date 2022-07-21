@@ -39,7 +39,8 @@ signUpWithEmail(
           createdAt: Timestamp.now(),
           id: value.user!.uid,
           totalSaved: 0,
-          totalOrder: 0);
+          totalOrder: 0,
+          imgName: "");
       await reference
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set(userCustom.toJson());
@@ -129,7 +130,8 @@ signInWithGoogle(
           createdAt: Timestamp.now(),
           id: FirebaseAuth.instance.currentUser!.uid,
           totalSaved: 0,
-          totalOrder: 0);
+          totalOrder: 0,
+          imgName: "");
       reference
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set(userCustom.toJson());
@@ -182,7 +184,8 @@ signInWithFacebook(BuildContext context) async {
         createdAt: Timestamp.now(),
         id: FirebaseAuth.instance.currentUser!.uid,
         totalSaved: 0,
-        totalOrder: 0);
+        totalOrder: 0,
+        imgName: "");
     reference
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set(userCustom.toJson());

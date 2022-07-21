@@ -10,7 +10,7 @@ import '../../../controllers/user_controller.dart';
 
 class SettingsBody extends StatefulWidget {
   const SettingsBody({Key? key}) : super(key: key);
-
+  static String imageName = "Select Image";
   @override
   State<SettingsBody> createState() => _SettingsBodyState();
 }
@@ -109,6 +109,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                                   count: snapshot.data!.totalSaved),
                               GestureDetector(
                                   onTap: () async {
+                                    SettingsBody.imageName = "Select Image";
                                     await editProfile(context, snapshot.data!);
                                   },
                                   child: buildTile(

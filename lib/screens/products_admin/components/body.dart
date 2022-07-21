@@ -10,7 +10,7 @@ import '../../../models/product_model.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
-
+  static String imageName = "Select Image";
   @override
   State<Body> createState() => _BodyState();
 }
@@ -48,115 +48,124 @@ class _BodyState extends State<Body> {
                 discountAdd.clear();
                 categoryAdd.clear();
                 priceAdd.clear();
-                UploadProduct uploadProduct = UploadProduct(setState);
+                Body.imageName = "Select Image";
+                UploadProduct uploadProduct = UploadProduct();
                 showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                          scrollable: true,
-                          contentPadding: const EdgeInsets.only(
-                              left: 10, right: 10, top: 20, bottom: 10),
-                          actionsAlignment: MainAxisAlignment.spaceEvenly,
-                          content: Form(
-                            key: formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                formField(nameAdd, "Name", TextInputType.name,
-                                    (value) => productNameValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    descriptionAdd,
-                                    "Description",
-                                    TextInputType.text,
-                                    (value) =>
-                                        productDescriptionValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    quantityAdd,
-                                    "Quantity",
-                                    TextInputType.number,
-                                    (value) => productQuantityValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    categoryAdd,
-                                    "Category",
-                                    TextInputType.text,
-                                    (value) => productCategoryValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    priceAdd,
-                                    "Price",
-                                    TextInputType.number,
-                                    (value) => productPriceValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    discountAdd,
-                                    "Discount",
-                                    TextInputType.number,
-                                    (value) => productDiscountValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 8),
+                    builder: (context) => StatefulBuilder(
+                          builder: (context, setState) => AlertDialog(
+                            scrollable: true,
+                            contentPadding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 20, bottom: 10),
+                            actionsAlignment: MainAxisAlignment.spaceEvenly,
+                            content: Form(
+                              key: formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  formField(nameAdd, "Name", TextInputType.name,
+                                      (value) => productNameValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                  onPressed: () {
-                                    uploadProduct.showPicker(context);
-                                    setState(() {});
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        uploadProduct.fileName == null
-                                            ? "Select Image"
-                                            : "File Selected",
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                    ],
+                                  formField(
+                                      descriptionAdd,
+                                      "Description",
+                                      TextInputType.text,
+                                      (value) =>
+                                          productDescriptionValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                ),
-                              ],
+                                  formField(
+                                      quantityAdd,
+                                      "Quantity",
+                                      TextInputType.number,
+                                      (value) =>
+                                          productQuantityValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  formField(
+                                      categoryAdd,
+                                      "Category",
+                                      TextInputType.text,
+                                      (value) =>
+                                          productCategoryValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  formField(
+                                      priceAdd,
+                                      "Price",
+                                      TextInputType.number,
+                                      (value) => productPriceValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  formField(
+                                      discountAdd,
+                                      "Discount",
+                                      TextInputType.number,
+                                      (value) =>
+                                          productDiscountValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14, horizontal: 8),
+                                    ),
+                                    onPressed: () {
+                                      uploadProduct.showPicker(
+                                          context, setState);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            Body.imageName,
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                            actions: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Cancel')),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor),
+                                  onPressed: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      await uploadProduct.upload(
+                                          name: nameAdd.text,
+                                          description: descriptionAdd.text,
+                                          quantity: int.parse(quantityAdd.text),
+                                          discount: discountAdd.text,
+                                          price: priceAdd.text,
+                                          category: categoryAdd.text,
+                                          context: context);
+                                    }
+                                  },
+                                  child: const Text('Submit')),
+                            ],
                           ),
-                          actions: [
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Cancel')),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor),
-                                onPressed: () async {
-                                  if (formKey.currentState!.validate()) {
-                                    await uploadProduct.upload(
-                                        name: nameAdd.text,
-                                        description: descriptionAdd.text,
-                                        quantity: int.parse(quantityAdd.text),
-                                        discount: discountAdd.text,
-                                        price: priceAdd.text,
-                                        category: categoryAdd.text,
-                                        context: context);
-                                  }
-                                },
-                                child: const Text('Submit')),
-                          ],
                         ));
               },
               child: const Text("Add Product"),
@@ -269,7 +278,7 @@ class _BodyState extends State<Body> {
                                         ),
                                         onPressed: () {
                                           UploadProduct uploadEditProduct =
-                                              UploadProduct(setState);
+                                              UploadProduct();
                                           name.text = e.name;
                                           description.text = e.description;
                                           quantity.text = e.quantity.toString();
@@ -278,169 +287,177 @@ class _BodyState extends State<Body> {
                                           category.text = e.category;
                                           showDialog(
                                             context: context,
-                                            builder: (context) => AlertDialog(
-                                              scrollable: true,
-                                              contentPadding:
-                                                  const EdgeInsets.only(
-                                                      left: 10,
-                                                      right: 10,
-                                                      top: 20,
-                                                      bottom: 10),
-                                              actionsAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              content: Form(
-                                                key: formKey,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      formField(
-                                                          name,
-                                                          "Name",
-                                                          TextInputType.name,
-                                                          (value) =>
-                                                              productNameValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          description,
-                                                          "Description",
-                                                          TextInputType.text,
-                                                          (value) =>
-                                                              productDescriptionValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          quantity,
-                                                          "Quantity",
-                                                          TextInputType.number,
-                                                          (value) =>
-                                                              productQuantityValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          category,
-                                                          "Category",
-                                                          TextInputType.text,
-                                                          (value) =>
-                                                              productCategoryValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          price,
-                                                          "Price",
-                                                          TextInputType.number,
-                                                          (value) =>
-                                                              productPriceValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          discount,
-                                                          "Discount",
-                                                          TextInputType.number,
-                                                          (value) =>
-                                                              productDiscountValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          primary:
-                                                              kPrimaryColor,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical: 10,
-                                                                  horizontal:
-                                                                      8),
+                                            builder: (context) =>
+                                                StatefulBuilder(
+                                              builder: (context, setState) =>
+                                                  AlertDialog(
+                                                scrollable: true,
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        left: 10,
+                                                        right: 10,
+                                                        top: 20,
+                                                        bottom: 10),
+                                                actionsAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                content: Form(
+                                                  key: formKey,
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        formField(
+                                                            name,
+                                                            "Name",
+                                                            TextInputType.name,
+                                                            (value) =>
+                                                                productNameValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
                                                         ),
-                                                        onPressed: () {
-                                                          uploadEditProduct
-                                                              .showPicker(
-                                                                  context);
-                                                          setState(() {});
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Text(
-                                                                e.imgName,
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            16),
+                                                        formField(
+                                                            description,
+                                                            "Description",
+                                                            TextInputType.text,
+                                                            (value) =>
+                                                                productDescriptionValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        formField(
+                                                            quantity,
+                                                            "Quantity",
+                                                            TextInputType
+                                                                .number,
+                                                            (value) =>
+                                                                productQuantityValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        formField(
+                                                            category,
+                                                            "Category",
+                                                            TextInputType.text,
+                                                            (value) =>
+                                                                productCategoryValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        formField(
+                                                            price,
+                                                            "Price",
+                                                            TextInputType
+                                                                .number,
+                                                            (value) =>
+                                                                productPriceValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        formField(
+                                                            discount,
+                                                            "Discount",
+                                                            TextInputType
+                                                                .number,
+                                                            (value) =>
+                                                                productDiscountValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            primary:
+                                                                kPrimaryColor,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        14,
+                                                                    horizontal:
+                                                                        8),
+                                                          ),
+                                                          onPressed: () {
+                                                            uploadEditProduct
+                                                                .showPicker(
+                                                                    context,
+                                                                    setState);
+                                                            setState(() {});
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Text(
+                                                                  Body.imageName,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
+                                                actions: [
+                                                  ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              primary:
+                                                                  kPrimaryColor),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('Cancel')),
+                                                  ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              primary:
+                                                                  kPrimaryColor),
+                                                      onPressed: () async {
+                                                        if (formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          await uploadEditProduct.edit(
+                                                              id: e.id,
+                                                              name: name.text,
+                                                              description:
+                                                                  description
+                                                                      .text,
+                                                              quantity:
+                                                                  int.parse(
+                                                                      quantity
+                                                                          .text),
+                                                              discount:
+                                                                  discount.text,
+                                                              price: price.text,
+                                                              imgName:
+                                                                  e.imgName,
+                                                              category:
+                                                                  category.text,
+                                                              context: context);
+                                                        }
+                                                      },
+                                                      child:
+                                                          const Text('Submit')),
+                                                ],
                                               ),
-                                              actions: [
-                                                ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            primary:
-                                                                kPrimaryColor),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child:
-                                                        const Text('Cancel')),
-                                                ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            primary:
-                                                                kPrimaryColor),
-                                                    onPressed: () async {
-                                                      if (formKey.currentState!
-                                                          .validate()) {
-                                                        await uploadEditProduct
-                                                            .edit(
-                                                                id: e.id,
-                                                                name: name.text,
-                                                                description:
-                                                                    description
-                                                                        .text,
-                                                                quantity:
-                                                                    int.parse(
-                                                                        quantity
-                                                                            .text),
-                                                                discount:
-                                                                    discount
-                                                                        .text,
-                                                                price:
-                                                                    price.text,
-                                                                imgName:
-                                                                    e.imgName,
-                                                                category:
-                                                                    category
-                                                                        .text,
-                                                                context:
-                                                                    context);
-                                                      }
-                                                    },
-                                                    child:
-                                                        const Text('Submit')),
-                                              ],
                                             ),
                                           );
                                         },
@@ -512,6 +529,9 @@ class _BodyState extends State<Body> {
                                                                     .of(context)
                                                                 .showSnackBar(
                                                               const SnackBar(
+                                                                duration: Duration(
+                                                                    milliseconds:
+                                                                        700),
                                                                 content: Text(
                                                                   "The product deleted successfully",
                                                                   style: TextStyle(

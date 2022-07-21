@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/controllers/cart_controller.dart';
 import 'package:plant_watch/screens/cart/components/body.dart';
@@ -9,12 +10,13 @@ import '../../../models/cart_model.dart';
 import '../../../models/product_model.dart';
 
 Widget buildCart(Cart cart, Function set) {
-  return StreamBuilder<List<Product>>(
+  return StreamBuilder<Product>(
       stream: CartController.cartProduct(cart.productId),
-      builder: (context, AsyncSnapshot<List<Product>> snapshot) {
+      builder: (context, AsyncSnapshot<Product> snapshot) {
         if (snapshot.hasData) {
-          Product product = snapshot.data![0];
-          CartBody.totalPrice += cart.quantity * int.parse(product.price);
+          Product product = snapshot.data!;
+          CartBody.totalPrice += cart.quantity *
+              (int.parse(product.price) - int.parse(product.discount));
           return Card(
             elevation: 8,
             margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
@@ -76,9 +78,24 @@ Widget buildCart(Cart cart, Function set) {
                         const SizedBox(
                           height: 5,
                         ),
-                        Text(
-                          product.price,
-                          style: const TextStyle(fontSize: 16),
+                        SizedBox(
+                          height: 25,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                product.price,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              Icon(Icons.remove),
+                              Text(
+                                product.discount + " tk discount",
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
@@ -91,14 +108,11 @@ Widget buildCart(Cart cart, Function set) {
                                 child: const Icon(Icons.remove),
                                 onTap: () {
                                   if (cart.quantity > 1) {
-                                    // CartBody.totalPrice -= cart.quantity *
-                                    //     int.parse(product.price);
                                     FirebaseFirestore.instance
                                         .collection('cart')
                                         .doc(cart.id)
                                         .update(
                                             {'quantity': cart.quantity - 1});
-                                    set(() {});
                                   }
                                 },
                               ),
@@ -137,8 +151,6 @@ Widget buildCart(Cart cart, Function set) {
                                         .doc(cart.id)
                                         .update(
                                             {'quantity': cart.quantity + 1});
-
-                                    set(() {});
                                   }
                                 },
                                 child: const Icon(Icons.add),

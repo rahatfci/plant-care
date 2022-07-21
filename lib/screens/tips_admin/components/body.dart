@@ -10,7 +10,7 @@ import '../../../models/tips_model.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
-
+  static String imageName = "Select Image";
   @override
   State<Body> createState() => _BodyState();
 }
@@ -36,80 +36,89 @@ class _BodyState extends State<Body> {
               onPressed: () {
                 titleAdd.clear();
                 descriptionAdd.clear();
-                UploadTips uploadTip = UploadTips(setState);
+                UploadTips uploadTip = UploadTips();
+                Body.imageName = "Select Image";
                 showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                          scrollable: true,
-                          contentPadding: const EdgeInsets.only(
-                              left: 10, right: 10, top: 20, bottom: 10),
-                          actionsAlignment: MainAxisAlignment.spaceEvenly,
-                          content: Form(
-                            key: formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                formField(titleAdd, "Title", TextInputType.name,
-                                    (value) => productNameValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                formField(
-                                    descriptionAdd,
-                                    "Description",
-                                    TextInputType.text,
-                                    (value) =>
-                                        productDescriptionValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 8),
+                    builder: (context) => StatefulBuilder(
+                          builder: (context, setState) => AlertDialog(
+                            scrollable: true,
+                            contentPadding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 20, bottom: 10),
+                            actionsAlignment: MainAxisAlignment.spaceEvenly,
+                            content: Form(
+                              key: formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  formField(
+                                      titleAdd,
+                                      "Title",
+                                      TextInputType.name,
+                                      (value) => productNameValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                  onPressed: () {
-                                    uploadTip.showPicker(context);
-                                    setState(() {});
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        uploadTip.fileName == null
-                                            ? "Select Image"
-                                            : "File Selected",
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                    ],
+                                  formField(
+                                      descriptionAdd,
+                                      "Description",
+                                      TextInputType.text,
+                                      (value) =>
+                                          productDescriptionValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                ),
-                              ],
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14, horizontal: 8),
+                                    ),
+                                    onPressed: () {
+                                      uploadTip.showPicker(context, setState);
+                                      setState(() {});
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            Body.imageName,
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                            actions: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Cancel')),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor),
+                                  onPressed: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      await uploadTip.upload(
+                                        title: titleAdd.text,
+                                        description: descriptionAdd.text,
+                                        context: context,
+                                      );
+                                    }
+                                  },
+                                  child: const Text('Submit')),
+                            ],
                           ),
-                          actions: [
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Cancel')),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor),
-                                onPressed: () async {
-                                  if (formKey.currentState!.validate()) {
-                                    await uploadTip.upload(
-                                      title: titleAdd.text,
-                                      description: descriptionAdd.text,
-                                      context: context,
-                                    );
-                                  }
-                                },
-                                child: const Text('Submit')),
-                          ],
                         ));
               },
               child: const Text("Add Tip"),
@@ -198,123 +207,133 @@ class _BodyState extends State<Body> {
                                         ),
                                         onPressed: () {
                                           UploadTips uploadEditTip =
-                                              UploadTips(setState);
+                                              UploadTips();
                                           title.text = e.title;
                                           description.text = e.description;
+                                          Body.imageName = e.imgName;
                                           showDialog(
                                             context: context,
-                                            builder: (context) => AlertDialog(
-                                              scrollable: true,
-                                              contentPadding:
-                                                  const EdgeInsets.only(
-                                                      left: 10,
-                                                      right: 10,
-                                                      top: 20,
-                                                      bottom: 10),
-                                              actionsAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              content: Form(
-                                                key: formKey,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      formField(
-                                                          title,
-                                                          "Title",
-                                                          TextInputType.name,
-                                                          (value) =>
-                                                              carouselTitleValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      formField(
-                                                          description,
-                                                          "Description",
-                                                          TextInputType.text,
-                                                          (value) =>
-                                                              carouselDescriptionValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          primary:
-                                                              kPrimaryColor,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical: 10,
-                                                                  horizontal:
-                                                                      8),
+                                            builder: (context) =>
+                                                StatefulBuilder(
+                                              builder: (context, setState) =>
+                                                  AlertDialog(
+                                                scrollable: true,
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        left: 10,
+                                                        right: 10,
+                                                        top: 20,
+                                                        bottom: 10),
+                                                actionsAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                content: Form(
+                                                  key: formKey,
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        formField(
+                                                            title,
+                                                            "Title",
+                                                            TextInputType.name,
+                                                            (value) =>
+                                                                carouselTitleValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
                                                         ),
-                                                        onPressed: () {
-                                                          uploadEditTip
-                                                              .showPicker(
-                                                                  context);
-                                                          setState(() {});
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Text(
-                                                                e.imgName,
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            16),
+                                                        formField(
+                                                            description,
+                                                            "Description",
+                                                            TextInputType.text,
+                                                            (value) =>
+                                                                carouselDescriptionValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            primary:
+                                                                kPrimaryColor,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        14,
+                                                                    horizontal:
+                                                                        8),
+                                                          ),
+                                                          onPressed: () {
+                                                            uploadEditTip
+                                                                .showPicker(
+                                                                    context,
+                                                                    setState);
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Text(
+                                                                  Body.imageName,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
+                                                actions: [
+                                                  ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              primary:
+                                                                  kPrimaryColor),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('Cancel')),
+                                                  ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              primary:
+                                                                  kPrimaryColor),
+                                                      onPressed: () async {
+                                                        if (formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          await uploadEditTip
+                                                              .edit(
+                                                                  id: e.id,
+                                                                  title: title
+                                                                      .text,
+                                                                  description:
+                                                                      description
+                                                                          .text,
+                                                                  context:
+                                                                      context,
+                                                                  imgName: e
+                                                                      .imgName);
+                                                        }
+                                                      },
+                                                      child:
+                                                          const Text('Submit')),
+                                                ],
                                               ),
-                                              actions: [
-                                                ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            primary:
-                                                                kPrimaryColor),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child:
-                                                        const Text('Cancel')),
-                                                ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            primary:
-                                                                kPrimaryColor),
-                                                    onPressed: () async {
-                                                      if (formKey.currentState!
-                                                          .validate()) {
-                                                        await uploadEditTip
-                                                            .edit(
-                                                                id: e.id,
-                                                                title:
-                                                                    title.text,
-                                                                description:
-                                                                    description
-                                                                        .text,
-                                                                context:
-                                                                    context,
-                                                                imgName:
-                                                                    e.imgName);
-                                                      }
-                                                    },
-                                                    child:
-                                                        const Text('Submit')),
-                                              ],
                                             ),
                                           );
                                         },
@@ -385,6 +404,9 @@ class _BodyState extends State<Body> {
                                                                     .of(context)
                                                                 .showSnackBar(
                                                               const SnackBar(
+                                                                duration: Duration(
+                                                                    milliseconds:
+                                                                        700),
                                                                 content: Text(
                                                                   "The tip deleted successfully",
                                                                   style: TextStyle(

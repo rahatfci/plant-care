@@ -75,12 +75,12 @@ class NavigationDrawer extends StatelessWidget {
       decoration: const BoxDecoration(
           image: DecorationImage(
         fit: BoxFit.fill,
-        image: AssetImage("assets/images/forest.jpg"),
+        image: AssetImage("assets/forest.jpg"),
       )),
       child: Stack(
         children: const <Widget>[
           Positioned(
-            child: Text("Welcome to Plant Watch",
+            child: Text("Welcome to Plant Trade",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

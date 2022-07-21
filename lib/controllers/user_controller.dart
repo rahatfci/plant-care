@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 
 import '../constants.dart';
 import '../models/user_model.dart';
+import '../screens/settings/components/body.dart';
 
 class UserController {
   static final CollectionReference reference =
@@ -24,15 +25,15 @@ class UserController {
 }
 
 class UploadProfile {
+  Function? set;
   FirebaseStorage storage = FirebaseStorage.instance;
-
+  UploadProfile();
   File? _photo;
-
+  String? fileName;
   final ImagePicker _picker = ImagePicker();
 
-  String? fileName;
-
-  void showPicker(context) {
+  void showPicker(context, Function setState) {
+    set = setState;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -43,7 +44,7 @@ class UploadProfile {
                 ListTile(
                     leading: const Icon(Icons.photo_library),
                     title: const Text('Gallery'),
-                    onTap: () {
+                    onTap: () async {
                       imgFromGallery();
                       Navigator.of(context).pop();
                     }),
@@ -69,9 +70,15 @@ class UploadProfile {
     if (pickedFile != null) {
       _photo = File(pickedFile.path);
       fileName = basename(_photo!.path);
-    } else {
-      fileName = "Something went wrong";
     }
+
+    set!(() {
+      if (fileName != null) {
+        SettingsBody.imageName = fileName!;
+      } else {
+        SettingsBody.imageName = "Something went wrong";
+      }
+    });
   }
 
   Future imgFromCamera() async {
@@ -79,12 +86,22 @@ class UploadProfile {
     if (pickedFile != null) {
       _photo = File(pickedFile.path);
       fileName = basename(_photo!.path);
-    } else {
-      fileName = "Something went wrong";
     }
+
+    set!(() {
+      if (_photo != null) {
+        SettingsBody.imageName = fileName!;
+      } else {
+        SettingsBody.imageName = "Something went wrong";
+      }
+    });
   }
 
-  Future edit({required String name, required BuildContext context}) async {
+  Future edit(
+      {required String name,
+      required BuildContext context,
+      required String id,
+      required String imgName}) async {
     showDialog(
         context: context,
         builder: (context) => const Center(
@@ -92,16 +109,27 @@ class UploadProfile {
               color: kPrimaryColor,
             )));
     try {
-      FirebaseAuth.instance.currentUser!.updateDisplayName(name);
-      FirebaseAuth.instance.currentUser!.reload();
+      if (name.isNotEmpty) {
+        FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+        FirebaseAuth.instance.currentUser!.reload();
+      }
+      if (fileName != null) {
+        final dynamic ref;
+        if (imgName.isNotEmpty) {
+          ref = FirebaseStorage.instance.ref().child('images/users/$imgName');
+          await ref.delete();
+        } else {
+          ref = FirebaseStorage.instance.ref().child('images/users/$fileName');
+        }
 
-      if (_photo != null) {
-        final ref =
-            FirebaseStorage.instance.ref().child('images/users/$fileName');
-        await ref.delete();
         await ref.putFile(_photo!);
         FirebaseAuth.instance.currentUser!
             .updatePhotoURL(await ref.getDownloadURL());
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(id)
+            .update({'imgName': imgName.isNotEmpty ? imgName : fileName});
         FirebaseAuth.instance.currentUser!.reload();
       }
       Navigator.pop(context);

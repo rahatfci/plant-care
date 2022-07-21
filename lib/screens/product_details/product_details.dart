@@ -239,6 +239,15 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       drawer: const NavigationDrawer(),
       drawerEnableOpenDragGesture: false,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 40.0),
+        child: FloatingActionButton(
+          child: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+          backgroundColor: kPrimaryColor,
+          elevation: 15,
+        ),
+      ),
     );
   }
 }

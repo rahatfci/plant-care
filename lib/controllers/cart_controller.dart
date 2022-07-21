@@ -16,17 +16,15 @@ class CartController {
             (event) => event.docs.map((e) => Cart.fromJson(e.data())).toList());
   }
 
-  static Stream<List<Product>> cartProduct(String productId) {
+  static Stream<Product> cartProduct(String productId) {
     return FirebaseFirestore.instance
         .collection('products')
-        .where('id', isEqualTo: productId)
+        .doc(productId)
         .snapshots()
-        .map((event) =>
-            event.docs.map((e) => Product.fromJson(e.data())).toList());
+        .map((event) => Product.fromJson(event.data()));
   }
 
   static Future addToCart(String productId, int quantity, String userId) async {
-
     dynamic dbRef = reference.doc();
     Cart data = Cart(
         id: dbRef.id, productId: productId, quantity: quantity, userId: userId);

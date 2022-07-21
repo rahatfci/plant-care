@@ -10,7 +10,7 @@ import '../../../models/category_model.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
-
+  static String imageName = "Select Image";
   @override
   State<Body> createState() => _BodyState();
 }
@@ -32,71 +32,80 @@ class _BodyState extends State<Body> {
             ElevatedButton(
               onPressed: () {
                 nameAdd.clear();
-                UploadCategory uploadCategory = UploadCategory(setState);
+                Body.imageName = "Select Image";
+                UploadCategory uploadCategory = UploadCategory();
                 showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                          scrollable: true,
-                          contentPadding: const EdgeInsets.only(
-                              left: 10, right: 10, top: 20, bottom: 10),
-                          actionsAlignment: MainAxisAlignment.spaceEvenly,
-                          content: Form(
-                            key: formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                formField(nameAdd, "Name", TextInputType.name,
-                                    (value) => categoryNameValidator(value)),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 8),
+                    builder: (context) =>
+                        StatefulBuilder(builder: (context, setState) {
+                          return AlertDialog(
+                            scrollable: true,
+                            contentPadding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 20, bottom: 10),
+                            actionsAlignment: MainAxisAlignment.spaceEvenly,
+                            content: Form(
+                              key: formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  formField(nameAdd, "Name", TextInputType.name,
+                                      (value) => categoryNameValidator(value)),
+                                  const SizedBox(
+                                    height: 15,
                                   ),
-                                  onPressed: () {
-                                    uploadCategory.showPicker(context);
-                                    setState(() {});
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        uploadCategory.fileName == null
-                                            ? "Select Image"
-                                            : "File Selected",
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                    ],
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14, horizontal: 8),
+                                    ),
+                                    onPressed: () {
+                                      uploadCategory.showPicker(
+                                          context, setState);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            Body.imageName,
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                const TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          actions: [
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Cancel')),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: kPrimaryColor),
-                                onPressed: () {
-                                  if (formKey.currentState!.validate()) {
-                                    uploadCategory.upload(
-                                        name: nameAdd.text, context: context);
-                                  }
-                                },
-                                child: const Text('Submit')),
-                          ],
-                        ));
+                            actions: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Cancel')),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: kPrimaryColor),
+                                  onPressed: () {
+                                    if (formKey.currentState!.validate()) {
+                                      uploadCategory.upload(
+                                          name: nameAdd.text, context: context);
+                                    }
+                                  },
+                                  child: const Text('Submit')),
+                            ],
+                          );
+                        }));
               },
-              child: const Text("Add Category"),
+              child: const Text(
+                "Add Category",
+              ),
               style: ElevatedButton.styleFrom(
                 primary: kPrimaryColor,
               ),
@@ -184,111 +193,118 @@ class _BodyState extends State<Body> {
                                           ),
                                           onPressed: () {
                                             name.text = e.name;
+                                            Body.imageName = e.imgName;
                                             UploadCategory uploadEditCategory =
-                                                UploadCategory(setState);
+                                                UploadCategory();
                                             showDialog(
                                               context: context,
-                                              builder: (context) => AlertDialog(
-                                                scrollable: true,
-                                                contentPadding:
-                                                    const EdgeInsets.only(
-                                                        left: 10,
-                                                        right: 10,
-                                                        top: 20,
-                                                        bottom: 10),
-                                                actionsAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                content: Form(
-                                                  key: formKey,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      formField(
-                                                          name,
-                                                          "Name",
-                                                          TextInputType.name,
-                                                          (value) =>
-                                                              categoryNameValidator(
-                                                                  value)),
-                                                      const SizedBox(
-                                                        height: 15,
-                                                      ),
-                                                      ElevatedButton(
+                                              builder: (context) =>
+                                                  StatefulBuilder(builder:
+                                                      (context, setState) {
+                                                return AlertDialog(
+                                                  scrollable: true,
+                                                  contentPadding:
+                                                      const EdgeInsets.only(
+                                                          left: 10,
+                                                          right: 10,
+                                                          top: 20,
+                                                          bottom: 10),
+                                                  actionsAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  content: Form(
+                                                    key: formKey,
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        formField(
+                                                            name,
+                                                            "Name",
+                                                            TextInputType.name,
+                                                            (value) =>
+                                                                categoryNameValidator(
+                                                                    value)),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            primary:
+                                                                kPrimaryColor,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        14,
+                                                                    horizontal:
+                                                                        8),
+                                                          ),
+                                                          onPressed: () {
+                                                            uploadEditCategory
+                                                                .showPicker(
+                                                                    context,
+                                                                    setState);
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Text(
+                                                                  Body.imageName,
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    ElevatedButton(
                                                         style: ElevatedButton
                                                             .styleFrom(
-                                                          primary:
-                                                              kPrimaryColor,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical: 10,
-                                                                  horizontal:
-                                                                      8),
-                                                        ),
+                                                                primary:
+                                                                    kPrimaryColor),
                                                         onPressed: () {
-                                                          uploadEditCategory
-                                                              .showPicker(
-                                                                  context);
+                                                          Navigator.pop(
+                                                              context);
                                                         },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Text(
-                                                                e.imgName,
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            14),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                actions: [
-                                                  ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              primary:
-                                                                  kPrimaryColor),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child:
-                                                          const Text('Cancel')),
-                                                  ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              primary:
-                                                                  kPrimaryColor),
-                                                      onPressed: () async {
-                                                        if (formKey
-                                                            .currentState!
-                                                            .validate()) {
-                                                          await uploadEditCategory
-                                                              .edit(
-                                                                  name:
-                                                                      name.text,
-                                                                  color:
-                                                                      e.color,
-                                                                  context:
-                                                                      context,
-                                                                  imgName:
-                                                                      e.imgName,
-                                                                  id: e.id);
-                                                        }
-                                                      },
-                                                      child:
-                                                          const Text('Submit')),
-                                                ],
-                                              ),
+                                                        child: const Text(
+                                                            'Cancel')),
+                                                    ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                primary:
+                                                                    kPrimaryColor),
+                                                        onPressed: () async {
+                                                          if (formKey
+                                                              .currentState!
+                                                              .validate()) {
+                                                            await uploadEditCategory
+                                                                .edit(
+                                                                    name: name
+                                                                        .text,
+                                                                    color:
+                                                                        e.color,
+                                                                    context:
+                                                                        context,
+                                                                    imgName: e
+                                                                        .imgName,
+                                                                    id: e.id);
+                                                          }
+                                                        },
+                                                        child: const Text(
+                                                            'Submit')),
+                                                  ],
+                                                );
+                                              }),
                                             );
                                           },
                                         ),
@@ -361,6 +377,9 @@ class _BodyState extends State<Body> {
                                                                       .of(context)
                                                                   .showSnackBar(
                                                                 const SnackBar(
+                                                                  duration: Duration(
+                                                                      milliseconds:
+                                                                          700),
                                                                   content: Text(
                                                                     "The category deleted successfully",
                                                                     style: TextStyle(

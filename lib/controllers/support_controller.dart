@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'package:plant_watch/screens/support/components/body.dart';
 
 import '../constants.dart';
 import '../models/support_model.dart';
@@ -20,19 +21,15 @@ class SupportController {
 }
 
 class UploadSupportTickets {
-  Function set;
-
-  UploadSupportTickets(this.set);
-
+  Function? set;
   FirebaseStorage storage = FirebaseStorage.instance;
-
+  UploadSupportTickets();
   File? _photo;
-
+  String? fileName;
   final ImagePicker _picker = ImagePicker();
 
-  String? fileName;
-
-  void showPicker(context) {
+  void showPicker(context, Function setState) {
+    set = setState;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -43,7 +40,7 @@ class UploadSupportTickets {
                 ListTile(
                     leading: const Icon(Icons.photo_library),
                     title: const Text('Gallery'),
-                    onTap: () {
+                    onTap: () async {
                       imgFromGallery();
                       Navigator.of(context).pop();
                     }),
@@ -66,24 +63,32 @@ class UploadSupportTickets {
 
   Future imgFromGallery() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    set(() {
-      if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-        fileName = basename(_photo!.path);
+    if (pickedFile != null) {
+      _photo = File(pickedFile.path);
+      fileName = basename(_photo!.path);
+    }
+
+    set!(() {
+      if (fileName != null) {
+        Body.imageName = fileName!;
       } else {
-        fileName = "Something went wrong";
+        Body.imageName = "Something went wrong";
       }
     });
   }
 
   Future imgFromCamera() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    set(() {
-      if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-        fileName = basename(_photo!.path);
+    if (pickedFile != null) {
+      _photo = File(pickedFile.path);
+      fileName = basename(_photo!.path);
+    }
+
+    set!(() {
+      if (_photo != null) {
+        Body.imageName = fileName!;
       } else {
-        fileName = "Something went wrong";
+        Body.imageName = "Something went wrong";
       }
     });
   }
@@ -93,7 +98,8 @@ class UploadSupportTickets {
       required String description,
       required BuildContext context}) async {
     if (_photo == null) {
-      Future.error("Please select a valid picture");
+      Body.imageName = "Please select a picture";
+      set!(() {});
     } else {
       showDialog(
           context: context,
@@ -120,7 +126,6 @@ class UploadSupportTickets {
 
         dbref.set(data.toJson());
         Navigator.pop(context);
-        set(() {});
       } catch (e) {
         Future.error(e.toString());
       }
@@ -161,7 +166,6 @@ class UploadSupportTickets {
 
       await dbref.update(data.toJson());
       Navigator.pop(context);
-      set(() {});
     } catch (e) {
       Future.error(e.toString());
     }

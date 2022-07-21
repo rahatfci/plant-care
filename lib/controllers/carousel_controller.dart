@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'package:plant_watch/screens/carousel_admin/components/body.dart';
 
 import '../constants.dart';
 import '../models/carousel_model.dart';
@@ -19,19 +20,15 @@ class CarouselControllerCustom {
 }
 
 class UploadCarousel {
-  Function set;
-
-  UploadCarousel(this.set);
-
+  Function? set;
+  UploadCarousel();
   FirebaseStorage storage = FirebaseStorage.instance;
-
   File? _photo;
-
   final ImagePicker _picker = ImagePicker();
-
   String? fileName;
 
-  void showPicker(context) {
+  void showPicker(context, Function setState) {
+    set = setState;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -65,24 +62,32 @@ class UploadCarousel {
 
   Future imgFromGallery() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    set(() {
-      if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-        fileName = basename(_photo!.path);
+    if (pickedFile != null) {
+      _photo = File(pickedFile.path);
+      fileName = basename(_photo!.path);
+    }
+
+    set!(() {
+      if (fileName != null) {
+        Body.imageName = fileName!;
       } else {
-        fileName = "Something went wrong";
+        Body.imageName = "Something went wrong";
       }
     });
   }
 
   Future imgFromCamera() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    set(() {
-      if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-        fileName = basename(_photo!.path);
+    if (pickedFile != null) {
+      _photo = File(pickedFile.path);
+      fileName = basename(_photo!.path);
+    }
+
+    set!(() {
+      if (_photo != null) {
+        Body.imageName = fileName!;
       } else {
-        fileName = "Something went wrong";
+        Body.imageName = "Something went wrong";
       }
     });
   }
@@ -93,7 +98,8 @@ class UploadCarousel {
       required String link,
       required BuildContext context}) async {
     if (_photo == null) {
-      Future.error("Please select a valid picture");
+      Body.imageName = "Please select a picture";
+      set!(() {});
     } else {
       showDialog(
           context: context,
@@ -117,7 +123,6 @@ class UploadCarousel {
 
         dbref.set(data.toJson());
         Navigator.pop(context);
-        set(() {});
       } catch (e) {
         Future.error(e.toString());
       }
@@ -157,7 +162,6 @@ class UploadCarousel {
 
       await dbref.update(editedCarousel.toJson());
       Navigator.pop(context);
-      set(() {});
     } catch (e) {
       Future.error(e.toString());
     }

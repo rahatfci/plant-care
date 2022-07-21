@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:plant_watch/constants.dart';
+import 'package:plant_watch/screens/products_admin/components/body.dart';
 
 import '../models/product_model.dart';
 
@@ -29,19 +30,15 @@ class ProductController {
 }
 
 class UploadProduct {
-  Function set;
-
-  UploadProduct(this.set);
-
+  Function? set;
   FirebaseStorage storage = FirebaseStorage.instance;
-
+  UploadProduct();
   File? _photo;
-
+  String? fileName;
   final ImagePicker _picker = ImagePicker();
 
-  String? fileName;
-
-  void showPicker(context) {
+  void showPicker(context, Function setState) {
+    set = setState;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -52,7 +49,7 @@ class UploadProduct {
                 ListTile(
                     leading: const Icon(Icons.photo_library),
                     title: const Text('Gallery'),
-                    onTap: () {
+                    onTap: () async {
                       imgFromGallery();
                       Navigator.of(context).pop();
                     }),
@@ -75,24 +72,32 @@ class UploadProduct {
 
   Future imgFromGallery() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    set(() {
-      if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-        fileName = basename(_photo!.path);
+    if (pickedFile != null) {
+      _photo = File(pickedFile.path);
+      fileName = basename(_photo!.path);
+    }
+
+    set!(() {
+      if (fileName != null) {
+        Body.imageName = fileName!;
       } else {
-        fileName = "Something went wrong";
+        Body.imageName = "Something went wrong";
       }
     });
   }
 
   Future imgFromCamera() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    set(() {
-      if (pickedFile != null) {
-        _photo = File(pickedFile.path);
-        fileName = basename(_photo!.path);
+    if (pickedFile != null) {
+      _photo = File(pickedFile.path);
+      fileName = basename(_photo!.path);
+    }
+
+    set!(() {
+      if (_photo != null) {
+        Body.imageName = fileName!;
       } else {
-        fileName = "Something went wrong";
+        Body.imageName = "Something went wrong";
       }
     });
   }
@@ -106,7 +111,8 @@ class UploadProduct {
       required String category,
       required BuildContext context}) async {
     if (_photo == null) {
-      Future.error("Please select a valid picture");
+      Body.imageName = "Please select a picture";
+      set!(() {});
     } else {
       showDialog(
           context: context,
@@ -133,7 +139,6 @@ class UploadProduct {
 
         dbref.set(data.toJson());
         Navigator.pop(context);
-        set(() {});
       } catch (e) {
         Future.error(e.toString());
       }
@@ -179,7 +184,6 @@ class UploadProduct {
 
       await dbref.update(editedProduct.toJson());
       Navigator.pop(context);
-      set(() {});
     } catch (e) {
       Future.error(e.toString());
     }
