@@ -110,13 +110,15 @@ class _SettingsBodyState extends State<SettingsBody> {
                               GestureDetector(
                                   onTap: () async {
                                     SettingsBody.imageName = "Select Image";
-                                    await editProfile(context, snapshot.data!);
+                                    await editProfile(context, snapshot.data!,
+                                        user.displayName!);
                                   },
                                   child: buildTile(
                                       "Edit Profile", 0xff63a3a8, Icons.edit)),
                               GestureDetector(
-                                onTap: () =>
-                                    Navigator.pushNamed(context, '/support'),
+                                onTap: () => Navigator.pushNamed(
+                                    context, '/support',
+                                    arguments: snapshot.data),
                                 child: buildTile("Help & Support", 0xffefbea3,
                                     Icons.support),
                               ),

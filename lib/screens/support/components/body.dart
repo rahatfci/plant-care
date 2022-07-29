@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/authentication/form_validation.dart';
 import 'package:plant_watch/components/form_field.dart';
 import 'package:plant_watch/controllers/support_controller.dart';
+import 'package:plant_watch/models/user_model.dart';
 
 import '../../../constants.dart';
 import '../../../models/support_model.dart';
@@ -27,6 +28,7 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ModalRoute.of(context)!.settings.arguments as UserCustom;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -132,8 +134,8 @@ class _BodyState extends State<Body> {
               height: 8,
             ),
             StreamBuilder<List<Support>>(
-              stream: SupportController.allSupportTickets(
-                  FirebaseAuth.instance.currentUser!.uid),
+              stream:
+                  SupportController.allSupportTickets(user.id, user.userType),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return SingleChildScrollView(
@@ -153,6 +155,11 @@ class _BodyState extends State<Body> {
                                       fontWeight: FontWeight.bold))),
                           DataColumn(
                               label: Text('Created At',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold))),
+                          DataColumn(
+                              label: Text('Status',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold))),
@@ -205,6 +212,138 @@ class _BodyState extends State<Body> {
                                   ),
                                 )),
                                 DataCell(Text(e.createdAt.toDate().toString())),
+                                e.status == "Unsolved"
+                                    ? DataCell(TextButton(
+                                        onPressed: () {
+                                          if (user.userType == "admin") {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                      title: const Text(
+                                                        "Issue Solved?",
+                                                      ),
+                                                      titleTextStyle:
+                                                          const TextStyle(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: kTextColor,
+                                                              letterSpacing: 1),
+                                                      actions: [
+                                                        ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            primary:
+                                                                kPrimaryColor,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical: 8,
+                                                                    horizontal:
+                                                                        8),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child:
+                                                              const Text("No"),
+                                                        ),
+                                                        ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            primary:
+                                                                kPrimaryColor,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical: 8,
+                                                                    horizontal:
+                                                                        8),
+                                                          ),
+                                                          onPressed: () async {
+                                                            await FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    "support_tickets")
+                                                                .doc(e.id)
+                                                                .update({
+                                                              'status': "Solved"
+                                                            }).then((value) async {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              ScaffoldMessenger
+                                                                      .of(context)
+                                                                  .showSnackBar(
+                                                                const SnackBar(
+                                                                  duration: Duration(
+                                                                      milliseconds:
+                                                                          700),
+                                                                  content: Text(
+                                                                    "The issue has been solved successfully",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                                  backgroundColor:
+                                                                      kPrimaryColor,
+                                                                ),
+                                                              );
+                                                            });
+                                                          },
+                                                          child:
+                                                              const Text("Yes"),
+                                                        ),
+                                                      ],
+                                                    ));
+                                          }
+                                        },
+                                        style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xFFD74D4D),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 6, vertical: 2)),
+                                        child: const Text(
+                                          "Unsolved",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
+                                      ))
+                                    : DataCell(TextButton(
+                                        style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xFF198754),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 6, vertical: 2)),
+                                        onPressed: () {
+                                          if (user.userType == "admin") {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                duration:
+                                                    Duration(milliseconds: 700),
+                                                content: Text(
+                                                  "The issue has been solved",
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                backgroundColor: kPrimaryColor,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: const Text("Solved",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16)),
+                                      )),
                                 DataCell(
                                   Row(
                                     children: [
@@ -404,10 +543,11 @@ class _BodyState extends State<Body> {
                                                           await FirebaseFirestore
                                                               .instance
                                                               .collection(
-                                                                  "support")
+                                                                  "support_tickets")
                                                               .doc(e.id)
                                                               .delete()
-                                                              .then((value) {
+                                                              .then(
+                                                                  (value) async {
                                                             Navigator.pop(
                                                                 context);
                                                             ScaffoldMessenger
@@ -418,7 +558,7 @@ class _BodyState extends State<Body> {
                                                                     milliseconds:
                                                                         700),
                                                                 content: Text(
-                                                                  "The tip deleted successfully",
+                                                                  "The support ticket deleted successfully",
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           18),
@@ -430,6 +570,13 @@ class _BodyState extends State<Body> {
                                                                     kPrimaryColor,
                                                               ),
                                                             );
+                                                            final ref =
+                                                                FirebaseStorage
+                                                                    .instance
+                                                                    .ref()
+                                                                    .child(
+                                                                        'images/support_tickets/${e.imgName}');
+                                                            await ref.delete();
                                                           });
                                                         },
                                                         child: const Text(

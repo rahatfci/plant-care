@@ -8,6 +8,7 @@ class Support {
   final String imgPath;
   final String userId;
   final Timestamp createdAt;
+  final String status;
 
   Support(
       {required this.id,
@@ -16,7 +17,8 @@ class Support {
       required this.imgName,
       required this.imgPath,
       required this.userId,
-      required this.createdAt});
+      required this.createdAt,
+      required this.status});
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -25,7 +27,8 @@ class Support {
       'imgName': imgName,
       'imgPath': imgPath,
       'userId': userId,
-      'createdAt': createdAt
+      'createdAt': createdAt,
+      'status': status
     };
   }
 
@@ -37,6 +40,7 @@ class Support {
         imgName: data['imgName'],
         imgPath: data['imgPath'],
         userId: data['userId'],
-        createdAt: data['createdAt']);
+        createdAt: data['createdAt'],
+        status: data['status']);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/controllers/cart_controller.dart';
 import 'package:plant_watch/screens/cart/components/body.dart';
@@ -89,7 +88,7 @@ Widget buildCart(Cart cart, Function set) {
                                 product.price,
                                 style: const TextStyle(fontSize: 16),
                               ),
-                              Icon(Icons.remove),
+                              const Icon(Icons.remove),
                               Text(
                                 product.discount + " tk discount",
                                 style: const TextStyle(fontSize: 15),

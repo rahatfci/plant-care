@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/authentication/form_validation.dart';
 import 'package:plant_watch/components/form_field.dart';
@@ -397,7 +398,8 @@ class _BodyState extends State<Body> {
                                                               .collection("tip")
                                                               .doc(e.id)
                                                               .delete()
-                                                              .then((value) {
+                                                              .then(
+                                                                  (value) async {
                                                             Navigator.pop(
                                                                 context);
                                                             ScaffoldMessenger
@@ -420,7 +422,13 @@ class _BodyState extends State<Body> {
                                                                     kPrimaryColor,
                                                               ),
                                                             );
-                                                            //FirebaseFirestore.instance.collection('cart')
+                                                            final ref =
+                                                                FirebaseStorage
+                                                                    .instance
+                                                                    .ref()
+                                                                    .child(
+                                                                        'images/tips/${e.imgName}');
+                                                            await ref.delete();
                                                           });
                                                         },
                                                         child: const Text(

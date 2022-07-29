@@ -7,7 +7,6 @@ import 'components/body.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({Key? key}) : super(key: key);
-
   @override
   State<SupportScreen> createState() => _SupportScreenState();
 }

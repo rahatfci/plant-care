@@ -194,21 +194,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: addToCart,
                             ),
                             TextButton(
-                              onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    dismissDirection:
-                                        DismissDirection.startToEnd,
-                                    duration: Duration(milliseconds: 700),
-                                    content: Text(
-                                      "Its Under Development. Stay Tuned",
-                                      style: TextStyle(fontSize: 16),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    backgroundColor: kPrimaryColor,
-                                  ),
-                                );
-                              },
+                              onPressed: () =>
+                                  Navigator.pushNamed(context, '/cart'),
                               style: TextButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 6),

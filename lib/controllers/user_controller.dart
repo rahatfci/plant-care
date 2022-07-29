@@ -114,13 +114,12 @@ class UploadProfile {
         FirebaseAuth.instance.currentUser!.reload();
       }
       if (fileName != null) {
-        final dynamic ref;
+        dynamic ref;
         if (imgName.isNotEmpty) {
           ref = FirebaseStorage.instance.ref().child('images/users/$imgName');
           await ref.delete();
-        } else {
-          ref = FirebaseStorage.instance.ref().child('images/users/$fileName');
         }
+        ref = FirebaseStorage.instance.ref().child('images/users/$fileName');
 
         await ref.putFile(_photo!);
         FirebaseAuth.instance.currentUser!

@@ -64,7 +64,7 @@ Future tipsDetails(BuildContext context, Tip tip) {
                   child: Text(
                 tip.description,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
+                style: const TextStyle(fontSize: 14),
               )),
             ],
           ),

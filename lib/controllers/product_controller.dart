@@ -163,10 +163,11 @@ class UploadProduct {
               color: kPrimaryColor,
             )));
     try {
-      final ref =
+      dynamic ref =
           FirebaseStorage.instance.ref().child('images/products/$imgName');
       if (fileName != null) {
         await ref.delete();
+        ref = FirebaseStorage.instance.ref().child('images/products/$fileName');
         await ref.putFile(_photo!);
       }
       Product editedProduct = Product(

@@ -35,7 +35,7 @@ signUpWithEmail(
           'https://firebasestorage.googleapis.com/v0/b/plant-watch-fci.appspot.com/o/images%2Fusers%2Favatar.png?alt=media&token=a8be1e03-03d4-48f5-b46c-3ab16e3367c2');
       await value.user!.reload();
       UserCustom userCustom = UserCustom(
-          userType: userType[0],
+          userType: userType[1],
           createdAt: Timestamp.now(),
           id: value.user!.uid,
           totalSaved: 0,
@@ -125,16 +125,20 @@ signInWithGoogle(
       if (link) {
         await userCredential.user!.linkWithCredential(authCredential!);
       }
-      UserCustom userCustom = UserCustom(
-          userType: userType[1],
-          createdAt: Timestamp.now(),
-          id: FirebaseAuth.instance.currentUser!.uid,
-          totalSaved: 0,
-          totalOrder: 0,
-          imgName: "");
-      reference
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .set(userCustom.toJson());
+      var user =
+          await reference.doc(FirebaseAuth.instance.currentUser!.uid).get();
+      if (!user.exists) {
+        UserCustom userCustom = UserCustom(
+            userType: userType[1],
+            createdAt: Timestamp.now(),
+            id: FirebaseAuth.instance.currentUser!.uid,
+            totalSaved: 0,
+            totalOrder: 0,
+            imgName: "");
+        reference
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set(userCustom.toJson());
+      }
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -155,6 +159,7 @@ signInWithGoogle(
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
+        duration: Duration(milliseconds: 700),
         content: Text(
           "Select an account please",
           style: TextStyle(fontSize: 18),
@@ -179,16 +184,20 @@ signInWithFacebook(BuildContext context) async {
 
   try {
     await FirebaseAuth.instance.signInWithCredential(credential);
-    UserCustom userCustom = UserCustom(
-        userType: userType[1],
-        createdAt: Timestamp.now(),
-        id: FirebaseAuth.instance.currentUser!.uid,
-        totalSaved: 0,
-        totalOrder: 0,
-        imgName: "");
-    reference
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set(userCustom.toJson());
+    var user =
+        await reference.doc(FirebaseAuth.instance.currentUser!.uid).get();
+    if (!user.exists) {
+      UserCustom userCustom = UserCustom(
+          userType: userType[1],
+          createdAt: Timestamp.now(),
+          id: FirebaseAuth.instance.currentUser!.uid,
+          totalSaved: 0,
+          totalOrder: 0,
+          imgName: "");
+      reference
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set(userCustom.toJson());
+    }
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -232,7 +241,10 @@ signOut(BuildContext context) async {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   showDialog(
       context: context,
-      builder: (context) => const Center(child: CircularProgressIndicator()));
+      builder: (context) => const Center(
+              child: CircularProgressIndicator(
+            color: kPrimaryColor,
+          )));
   try {
     final _providerData = _auth.currentUser!.providerData;
     if (_providerData.isNotEmpty) {

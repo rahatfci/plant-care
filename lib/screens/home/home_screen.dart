@@ -48,10 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
           HomeScreen.appBarTitle[HomeScreen.selectedIndex],
           HomeScreen.appBarIcons[HomeScreen.selectedIndex],
           scaffoldKey),
-      body: IndexedStack(
+      body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
+          child:IndexedStack(
         index: HomeScreen.selectedIndex,
         children: HomeScreen.pages,
-      ),
+      )),
       bottomNavigationBar: myBottomNavBar(setState),
       drawer: const NavigationDrawer(),
       drawerEnableOpenDragGesture: false,

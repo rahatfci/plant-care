@@ -20,10 +20,12 @@ class _SearchBoxState extends State<SearchBox> {
         style: const TextStyle(
           color: kTextColor,
           fontSize: 18,
+
           fontWeight: FontWeight.w400,
         ),
         key: searchKey,
         controller: searchController,
+        cursorColor: kPrimaryColor,
         decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20, vertical: 0),

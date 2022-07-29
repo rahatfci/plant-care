@@ -115,3 +115,7 @@ String? productPriceValidator(String? value) {
   }
   return null;
 }
+
+String? noValidation(String? value) {
+  return null;
+}

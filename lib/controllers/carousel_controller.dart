@@ -144,10 +144,11 @@ class UploadCarousel {
               color: kPrimaryColor,
             )));
     try {
-      final ref =
+      dynamic ref =
           FirebaseStorage.instance.ref().child('images/carousel/$imgName');
       if (fileName != null) {
         await ref.delete();
+        ref = FirebaseStorage.instance.ref().child('images/carousel/$fileName');
         await ref.putFile(_photo!);
       }
       CarouselCustom editedCarousel = CarouselCustom(

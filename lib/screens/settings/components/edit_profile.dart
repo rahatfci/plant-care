@@ -10,9 +10,10 @@ import 'package:plant_watch/screens/settings/components/body.dart';
 import '../../../components/form_field.dart';
 import '../../../constants.dart';
 
-Future editProfile(BuildContext context, UserCustom user) {
+Future editProfile(BuildContext context, UserCustom user, String displayName) {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController name = TextEditingController();
+  name.text = displayName;
   UploadProfile uploadProfile = UploadProfile();
   return showDialog(
     context: context,

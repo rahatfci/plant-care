@@ -152,9 +152,11 @@ class UploadTips {
               color: kPrimaryColor,
             )));
     try {
-      final ref = FirebaseStorage.instance.ref().child('images/tips/$imgName');
+      dynamic ref =
+          FirebaseStorage.instance.ref().child('images/tips/$imgName');
       if (fileName != null) {
         await ref.delete();
+        ref = FirebaseStorage.instance.ref().child('images/tips/$fileName');
         await ref.putFile(_photo!);
       }
       Tip data = Tip(

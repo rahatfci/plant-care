@@ -141,10 +141,12 @@ class UploadCategory {
               color: kPrimaryColor,
             )));
     try {
-      final ref =
+      dynamic ref =
           FirebaseStorage.instance.ref().child('images/categories/$imgName');
       if (fileName != null) {
         await ref.delete();
+        ref =
+            FirebaseStorage.instance.ref().child('images/categories/$fileName');
         await ref.putFile(_photo!);
       }
       Category editedProduct = Category(

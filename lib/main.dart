@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/constants.dart';
+import 'package:plant_watch/screens/buy/buy_screen.dart';
+import 'package:plant_watch/screens/buy/components/confirm_order.dart';
 import 'package:plant_watch/screens/carousel_admin/carousel_admin_screen.dart';
 import 'package:plant_watch/screens/cart/cart_screen.dart';
 import 'package:plant_watch/screens/categories/categories_screen.dart';
@@ -47,6 +49,8 @@ class MyApp extends StatelessWidget {
         '/carousel_admin': (context) => const CarouselAdminScreen(),
         '/tips_admin': (context) => const TipsAdminScreen(),
         '/support': (context) => const SupportScreen(),
+        '/buy': (context) => const BuyScreen(),
+        '/confirm_order': (context) => const ConfirmOrderScreen(),
       },
     );
   }

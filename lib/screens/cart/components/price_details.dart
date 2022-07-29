@@ -19,24 +19,11 @@ Widget priceDetails(Function set, BuildContext context) {
             backgroundColor: kPrimaryColor,
           ),
           child: Text(
-            "Total Price - ${CartBody.totalPrice} tk",
+            "Total Price - ${CartBody.totalPrice / 2} tk",
             style: const TextStyle(fontSize: 18, color: Colors.white),
           )),
       TextButton(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              dismissDirection: DismissDirection.startToEnd,
-              duration: Duration(milliseconds: 700),
-              content: Text(
-                "Its Under Development. Stay Tuned",
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              backgroundColor: kPrimaryColor,
-            ),
-          );
-        },
+        onPressed: () => Navigator.pushNamed(context, '/buy'),
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
           shape:
