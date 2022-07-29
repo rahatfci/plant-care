@@ -5,14 +5,13 @@ import '../../components/nav_drawer.dart';
 import '../../constants.dart';
 import 'components/body.dart';
 
-class ProductsAdminScreen extends StatefulWidget {
-  const ProductsAdminScreen({Key? key}) : super(key: key);
-
+class SupportScreen extends StatefulWidget {
+  const SupportScreen({Key? key}) : super(key: key);
   @override
-  State<ProductsAdminScreen> createState() => _ProductsAdminScreenState();
+  State<SupportScreen> createState() => _SupportScreenState();
 }
 
-class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
+class _SupportScreenState extends State<SupportScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {

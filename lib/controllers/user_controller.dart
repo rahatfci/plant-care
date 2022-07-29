@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 
 import '../constants.dart';
 import '../models/user_model.dart';
+import '../screens/settings/components/body.dart';
 
 class UserController {
   static final CollectionReference reference =
@@ -18,24 +19,21 @@ class UserController {
         event.docs.map((e) => UserCustom.fromJson(e.data())).toList());
   }
 
-  static Stream<UserCustom> loggedUser(String id) {
-    return reference
-        .doc(id)
-        .snapshots()
-        .map((event) => UserCustom.fromJson(event.data()));
+  static Future<UserCustom> loggedUser(String id) {
+    return reference.doc(id).get().then((value) => UserCustom.fromJson(value));
   }
 }
 
 class UploadProfile {
+  Function? set;
   FirebaseStorage storage = FirebaseStorage.instance;
-
+  UploadProfile();
   File? _photo;
-
+  String? fileName;
   final ImagePicker _picker = ImagePicker();
 
-  String? fileName;
-
-  void showPicker(context) {
+  void showPicker(context, Function setState) {
+    set = setState;
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -46,7 +44,7 @@ class UploadProfile {
                 ListTile(
                     leading: const Icon(Icons.photo_library),
                     title: const Text('Gallery'),
-                    onTap: () {
+                    onTap: () async {
                       imgFromGallery();
                       Navigator.of(context).pop();
                     }),
@@ -72,9 +70,15 @@ class UploadProfile {
     if (pickedFile != null) {
       _photo = File(pickedFile.path);
       fileName = basename(_photo!.path);
-    } else {
-      fileName = "Something went wrong";
     }
+
+    set!(() {
+      if (fileName != null) {
+        SettingsBody.imageName = fileName!;
+      } else {
+        SettingsBody.imageName = "Something went wrong";
+      }
+    });
   }
 
   Future imgFromCamera() async {
@@ -82,53 +86,22 @@ class UploadProfile {
     if (pickedFile != null) {
       _photo = File(pickedFile.path);
       fileName = basename(_photo!.path);
-    } else {
-      fileName = "Something went wrong";
     }
-  }
 
-  Future upload(
-      {required String id,
-      required String userType,
-      String? address,
-      required int totalSaved,
-      required BuildContext context}) async {
-    showDialog(
-        context: context,
-        builder: (context) => const Center(
-                child: CircularProgressIndicator(
-              color: kPrimaryColor,
-            )));
-    try {
+    set!(() {
       if (_photo != null) {
-        final ref =
-            FirebaseStorage.instance.ref().child('images/users/$fileName');
-        await ref.putFile(_photo!);
-        FirebaseAuth.instance.currentUser!
-            .updatePhotoURL(await ref.getDownloadURL());
-        FirebaseAuth.instance.currentUser!.reload();
+        SettingsBody.imageName = fileName!;
+      } else {
+        SettingsBody.imageName = "Something went wrong";
       }
-      dynamic dbref = FirebaseFirestore.instance.collection('users').doc(id);
-      dynamic data = UserCustom(
-          id: id,
-          userType: userType,
-          address: address,
-          createdAt: Timestamp.now(),
-          totalSaved: totalSaved);
-      dbref.set(data.toJson());
-      Navigator.pop(context);
-    } catch (e) {
-      Future.error(e.toString());
-    }
-    Navigator.pop(context);
+    });
   }
 
   Future edit(
-      {required String id,
-      required String userType,
-      String? address,
-      required int totalSaved,
-      required BuildContext context}) async {
+      {required String name,
+      required BuildContext context,
+      required String id,
+      required String imgName}) async {
     showDialog(
         context: context,
         builder: (context) => const Center(
@@ -136,26 +109,32 @@ class UploadProfile {
               color: kPrimaryColor,
             )));
     try {
-      if (_photo != null) {
-        final ref =
-            FirebaseStorage.instance.ref().child('images/users/$fileName');
+      if (name.isNotEmpty) {
+        FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+        FirebaseAuth.instance.currentUser!.reload();
+      }
+      if (fileName != null) {
+        dynamic ref;
+        if (imgName.isNotEmpty) {
+          ref = FirebaseStorage.instance.ref().child('images/users/$imgName');
+          await ref.delete();
+        }
+        ref = FirebaseStorage.instance.ref().child('images/users/$fileName');
+
         await ref.putFile(_photo!);
         FirebaseAuth.instance.currentUser!
             .updatePhotoURL(await ref.getDownloadURL());
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(id)
+            .update({'imgName': imgName.isNotEmpty ? imgName : fileName});
         FirebaseAuth.instance.currentUser!.reload();
       }
-      dynamic dbref = FirebaseFirestore.instance.collection('users').doc(id);
-      dynamic data = UserCustom(
-          id: id,
-          userType: userType,
-          address: address,
-          createdAt: Timestamp.now(),
-          totalSaved: totalSaved);
-      await dbref.update(data.toJson());
       Navigator.pop(context);
     } catch (e) {
+      Navigator.pop(context);
       Future.error(e.toString());
     }
-    Navigator.pop(context);
   }
 }

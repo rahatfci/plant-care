@@ -3,7 +3,7 @@ class Product {
   final String name;
   final String imgPath;
   final String description;
-  final String amount;
+  final int quantity;
   final String discount;
   final String price;
   final String imgName;
@@ -14,7 +14,7 @@ class Product {
       required this.name,
       required this.imgPath,
       required this.description,
-      required this.amount,
+      required this.quantity,
       required this.discount,
       required this.price,
       required this.imgName,
@@ -26,7 +26,7 @@ class Product {
       'name': name,
       'imgPath': imgPath,
       'description': description,
-      'amount': amount,
+      'quantity': quantity,
       'discount': discount,
       'price': price,
       'imgName': imgName,
@@ -40,7 +40,7 @@ class Product {
         name: data['name'],
         imgPath: data['imgPath'],
         description: data['description'],
-        amount: data['amount'],
+        quantity: data['quantity'],
         discount: data['discount'],
         price: data['price'],
         imgName: data['imgName'],

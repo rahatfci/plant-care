@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_watch/constants.dart';
+import 'package:plant_watch/screens/home/home_screen.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -15,9 +15,8 @@ class NavigationDrawer extends StatelessWidget {
           icon: Icons.home,
           text: "Home",
           onTap: () {
-            if (ModalRoute.of(context)!.settings.name != '/') {
-              Navigator.pushNamed(context, '/');
-            }
+            HomeScreen.selectedIndex = 0;
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
           },
         ),
         const Divider(),
@@ -44,33 +43,27 @@ class NavigationDrawer extends StatelessWidget {
         ),
         const Divider(),
         drawerBodyItem(
-          icon: Icons.shopping_cart,
-          text: 'Cart',
+          icon: Icons.image,
+          text: 'Carousel',
           onTap: () {
             Navigator.pop(context);
-            if (ModalRoute.of(context)!.settings.name != '/cart') {
-              Navigator.pushNamed(context, '/cart');
+            if (ModalRoute.of(context)!.settings.name != '/carousel_admin') {
+              Navigator.pushNamed(context, '/carousel_admin');
             }
           },
         ),
         const Divider(),
         drawerBodyItem(
-          icon: Icons.account_circle,
-          text: 'Sellers',
+          icon: Icons.lightbulb,
+          text: 'Tips',
           onTap: () {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  "It's under construction. Stay tuned",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                backgroundColor: kPrimaryColor,
-              ),
-            );
+            if (ModalRoute.of(context)!.settings.name != '/tips_admin') {
+              Navigator.pushNamed(context, '/tips_admin');
+            }
           },
         ),
+        const Divider(),
       ],
     ));
   }
@@ -82,12 +75,12 @@ class NavigationDrawer extends StatelessWidget {
       decoration: const BoxDecoration(
           image: DecorationImage(
         fit: BoxFit.fill,
-        image: AssetImage("assets/images/forest.jpg"),
+        image: AssetImage("assets/forest.jpg"),
       )),
       child: Stack(
         children: const <Widget>[
           Positioned(
-            child: Text("Welcome to Plant Watch",
+            child: Text("Welcome to Plant Trade",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

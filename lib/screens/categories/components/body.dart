@@ -5,8 +5,8 @@ import '../../../controllers/category_controller.dart';
 import '../../../models/category_model.dart';
 import 'build_tile.dart';
 
-class Body extends StatelessWidget {
-  const Body({Key? key}) : super(key: key);
+class CategoryBody extends StatelessWidget {
+  const CategoryBody({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Category>>(

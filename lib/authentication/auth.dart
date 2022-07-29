@@ -11,7 +11,7 @@ import '../screens/home/home_screen.dart';
 
 CollectionReference reference = FirebaseFirestore.instance.collection('users');
 
-List<String> userType = ['admin', 'vendor', 'customer'];
+List<String> userType = ['admin', 'customer'];
 
 signUpWithEmail(
     {required String email,
@@ -35,17 +35,19 @@ signUpWithEmail(
           'https://firebasestorage.googleapis.com/v0/b/plant-watch-fci.appspot.com/o/images%2Fusers%2Favatar.png?alt=media&token=a8be1e03-03d4-48f5-b46c-3ab16e3367c2');
       await value.user!.reload();
       UserCustom userCustom = UserCustom(
-          userType: userType[0],
+          userType: userType[1],
           createdAt: Timestamp.now(),
           id: value.user!.uid,
-          totalSaved: 0);
+          totalSaved: 0,
+          totalOrder: 0,
+          imgName: "");
       await reference
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set(userCustom.toJson());
     });
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
         (route) => false);
   } on FirebaseAuthException catch (e) {
     Navigator.pop(context);
@@ -80,7 +82,7 @@ Future<void> signInWithEmail({
     );
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
         (route) => false);
   } on FirebaseAuthException catch (e) {
     Navigator.pop(context);
@@ -123,18 +125,23 @@ signInWithGoogle(
       if (link) {
         await userCredential.user!.linkWithCredential(authCredential!);
       }
-      UserCustom userCustom = UserCustom(
-        userType: userType[1],
-        createdAt: Timestamp.now(),
-        id: FirebaseAuth.instance.currentUser!.uid,
-        totalSaved: 0,
-      );
-      reference
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .set(userCustom.toJson());
+      var user =
+          await reference.doc(FirebaseAuth.instance.currentUser!.uid).get();
+      if (!user.exists) {
+        UserCustom userCustom = UserCustom(
+            userType: userType[1],
+            createdAt: Timestamp.now(),
+            id: FirebaseAuth.instance.currentUser!.uid,
+            totalSaved: 0,
+            totalOrder: 0,
+            imgName: "");
+        reference
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set(userCustom.toJson());
+      }
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
           (route) => false);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -152,6 +159,7 @@ signInWithGoogle(
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
+        duration: Duration(milliseconds: 700),
         content: Text(
           "Select an account please",
           style: TextStyle(fontSize: 18),
@@ -176,18 +184,23 @@ signInWithFacebook(BuildContext context) async {
 
   try {
     await FirebaseAuth.instance.signInWithCredential(credential);
-    UserCustom userCustom = UserCustom(
-      userType: userType[1],
-      createdAt: Timestamp.now(),
-      id: FirebaseAuth.instance.currentUser!.uid,
-      totalSaved: 0,
-    );
-    reference
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set(userCustom.toJson());
+    var user =
+        await reference.doc(FirebaseAuth.instance.currentUser!.uid).get();
+    if (!user.exists) {
+      UserCustom userCustom = UserCustom(
+          userType: userType[1],
+          createdAt: Timestamp.now(),
+          id: FirebaseAuth.instance.currentUser!.uid,
+          totalSaved: 0,
+          totalOrder: 0,
+          imgName: "");
+      reference
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set(userCustom.toJson());
+    }
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
         (route) => false);
   } on FirebaseAuthException catch (e) {
     Navigator.pop(context);
@@ -228,7 +241,10 @@ signOut(BuildContext context) async {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   showDialog(
       context: context,
-      builder: (context) => const Center(child: CircularProgressIndicator()));
+      builder: (context) => const Center(
+              child: CircularProgressIndicator(
+            color: kPrimaryColor,
+          )));
   try {
     final _providerData = _auth.currentUser!.providerData;
     if (_providerData.isNotEmpty) {
@@ -243,6 +259,7 @@ signOut(BuildContext context) async {
     }
 
     await _auth.signOut();
+    HomeScreen.selectedIndex = 0;
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const SignUpScreen()),
@@ -260,4 +277,14 @@ signOut(BuildContext context) async {
       ),
     );
   }
+}
+
+Future<bool> isAdmin() async {
+  return await (FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .get()
+      .then((value) {
+    return value.data()!['userType'] == 'admin' ? true : false;
+  }));
 }

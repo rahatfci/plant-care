@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/constants.dart';
 import 'package:plant_watch/screens/category_details/category_details_screen.dart';
@@ -23,7 +24,12 @@ Widget buildTile(String text, String image, BuildContext context, int color) {
                   children: [
                     CircleAvatar(
                       radius: 25,
-                      backgroundImage: NetworkImage(image),
+                      backgroundImage: CachedNetworkImageProvider(image,
+                          errorListener: () => const Text(
+                                "Something went wrong",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 8),
+                              )),
                       backgroundColor: kPrimaryColor,
                     )
                   ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_watch/components/app_bar.dart';
-import 'package:plant_watch/components/bottom_nav.dart';
+import 'package:plant_watch/constants.dart';
 
 import '../../components/nav_drawer.dart';
 import 'components/body.dart';
@@ -20,12 +20,20 @@ class _CategoriesAdminScreenState extends State<CategoriesAdminScreen> {
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
         key: scaffoldKey,
-        appBar: buildAppBar(
-            context, "Categories(admin)", Icons.high_quality, scaffoldKey),
+        appBar: buildAppBar(context, scaffoldKey),
         body: const Body(),
-        bottomNavigationBar: const MyBottomNavBar(),
+        //bottomNavigationBar: const MyBottomNavBar(),
         drawer: const NavigationDrawer(),
         drawerEnableOpenDragGesture: false,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 25.0, right: 10),
+          child: FloatingActionButton(
+            child: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+            backgroundColor: kPrimaryColor,
+            elevation: 15,
+          ),
+        ),
       ),
     );
   }

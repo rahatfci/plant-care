@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:plant_watch/controllers/cart_controller.dart';
-import 'package:plant_watch/screens/cart/components/build_cart.dart';
 import 'package:plant_watch/screens/cart/components/price_details.dart';
 
 import '../../../constants.dart';
 import '../../../models/cart_model.dart';
+import 'build_cart.dart';
 
-class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
-
+class CartBody extends StatefulWidget {
+  const CartBody({Key? key}) : super(key: key);
+  static int totalPrice = 0;
   @override
-  State<Body> createState() => _BodyState();
+  State<CartBody> createState() => _CartBodyState();
 }
 
-class _BodyState extends State<Body> {
+class _CartBodyState extends State<CartBody> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -22,6 +22,7 @@ class _BodyState extends State<Body> {
             stream: CartController.allCart(),
             builder: (context, AsyncSnapshot<List<Cart>> snapshot) {
               if (snapshot.hasData) {
+                CartBody.totalPrice = 0;
                 return Expanded(
                   child: ListView(
                       padding: const EdgeInsets.only(top: 5),
@@ -42,7 +43,10 @@ class _BodyState extends State<Body> {
         const SizedBox(
           height: 10,
         ),
-        priceDetails()
+        priceDetails(setState, context),
+        const SizedBox(
+          height: 10,
+        ),
       ],
     );
   }

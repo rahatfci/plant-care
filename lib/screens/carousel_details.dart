@@ -18,80 +18,73 @@ class _CarouselDetailsState extends State<CarouselDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: buildAppBar(context, "Details", Icons.settings, scaffoldKey),
+      appBar: buildAppBar(context, scaffoldKey),
       body: Align(
         alignment: Alignment.bottomCenter,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Hero(
-                tag: widget.carousel.id,
-                child: Image.asset(
-                  widget.carousel.imgPath,
-                )),
-            const SizedBox(
-              height: 20,
+              tag: widget.carousel.id,
+              child: Image.network(
+                widget.carousel.imgPath,
+                height: 300,
+              ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 15),
-                const Divider(
-                  thickness: 2,
-                  height: 0,
-                ),
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.only(
-                      top: 20, left: 20, right: 20, bottom: 0),
-                  child: Row(
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.carousel.title,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Description",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Text(
-                                  widget.carousel.description,
-                                  style: TextStyle(
-                                      color: kTextColor.withOpacity(.8),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15),
+            Expanded(
+              child: ListView(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.only(
+                        top: 20, left: 20, right: 20, bottom: 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.carousel.title,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Description",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              height: 150,
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Text(
+                                    widget.carousel.description,
+                                    style: TextStyle(
+                                        overflow: TextOverflow.fade,
+                                        color: kTextColor.withOpacity(.8),
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15),
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                        ],
-                      ),
-                    ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           ],
         ),

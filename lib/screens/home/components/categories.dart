@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/constants.dart';
 import 'package:plant_watch/screens/category_details/category_details_screen.dart';
@@ -20,7 +21,7 @@ class _CategoriesState extends State<Categories> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SizedBox(
-            height: 90,
+            height: 105,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: snapshot.data!.map(buildCategory).toList(),
@@ -49,26 +50,65 @@ class _CategoriesState extends State<Categories> {
         padding: const EdgeInsets.only(
           right: 15,
         ),
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color(0xffcdcdcd)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
           child: Column(
             children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                child: Image.network(
-                  category.imgPath,
-                  height: 60,
-                  fit: BoxFit.fill,
+              CachedNetworkImage(
+                imageUrl: category.imgPath,
+                height: 70,
+                width: 90,
+                fit: BoxFit.fill,
+                progressIndicatorBuilder: (BuildContext context, String url,
+                        DownloadProgress progress) =>
+                    Center(
+                  child: SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: CircularProgressIndicator(
+                        color: kPrimaryColor, value: progress.progress),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error,
+                      color: kPrimaryColor,
+                    ),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                    Expanded(
+                      child: Text(
+                        error.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 10, overflow: TextOverflow.fade),
+                      ),
+                    )
+                  ],
                 ),
               ),
-              Text(
-                category.name,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              const SizedBox(
+                height: 5,
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  color: Color(0xffcdcdcd),
+                ),
+                child: Text(
+                  category.name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 16),
+                ),
               )
             ],
           ),

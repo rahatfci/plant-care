@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:plant_watch/components/bottom_nav.dart';
-
+import '../../authentication/auth.dart';
 import '../../components/app_bar.dart';
 import '../../components/nav_drawer.dart';
 import 'components/body.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   CartScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  bool admin = false;
+  @override
+  void initState() {
+    super.initState();
+    if (admin) {
+      Navigator.pushReplacementNamed(context, '/sign_up');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: buildAppBar(
-          context, "Cart", Icons.shopping_cart_outlined, scaffoldKey),
-      body: const Body(),
-      bottomNavigationBar: const MyBottomNavBar(),
+      appBar: buildAppBar(context, scaffoldKey),
+      body: const CartBody(),
+      //bottomNavigationBar: const MyBottomNavBar(),
       drawer: const NavigationDrawer(),
       drawerEnableOpenDragGesture: false,
     );

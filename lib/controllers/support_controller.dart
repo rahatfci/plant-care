@@ -1,38 +1,34 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
-import 'package:plant_watch/screens/tips_admin/components/body.dart';
+import 'package:plant_watch/screens/support/components/body.dart';
 
 import '../constants.dart';
-import '../models/tips_model.dart';
+import '../models/support_model.dart';
 
-class TipsController {
+class SupportController {
   static final CollectionReference reference =
-      FirebaseFirestore.instance.collection('tip');
-  static Stream<List<Tip>> allTip() {
-    return reference
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((event) => event.docs.map((e) => Tip.fromJson(e.data())).toList());
-  }
-
-  static Stream<List<Tip>> topTip() {
-    return reference
-        .orderBy('createdAt', descending: true)
-        .limit(1)
-        .snapshots()
-        .map((event) => event.docs.map((e) => Tip.fromJson(e.data())).toList());
+      FirebaseFirestore.instance.collection('support_tickets');
+  static Stream<List<Support>> allSupportTickets(String id, String userType) {
+    if (userType != "admin") {
+      return reference.where('userId', isEqualTo: id).snapshots().map((event) =>
+          event.docs.map((e) => Support.fromJson(e.data())).toList());
+    } else {
+      return reference.snapshots().map((event) =>
+          event.docs.map((e) => Support.fromJson(e.data())).toList());
+    }
   }
 }
 
-class UploadTips {
+class UploadSupportTickets {
   Function? set;
   FirebaseStorage storage = FirebaseStorage.instance;
-  UploadTips();
+  UploadSupportTickets();
   File? _photo;
   String? fileName;
   final ImagePicker _picker = ImagePicker();
@@ -117,18 +113,22 @@ class UploadTips {
                 color: kPrimaryColor,
               )));
       try {
-        final ref =
-            FirebaseStorage.instance.ref().child('images/tips/$fileName');
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('images/support_tickets/$fileName');
         await ref.putFile(_photo!);
-        dynamic dbref = FirebaseFirestore.instance.collection('tip').doc();
+        dynamic dbref =
+            FirebaseFirestore.instance.collection('support_tickets').doc();
 
-        dynamic data = Tip(
+        dynamic data = Support(
             id: dbref.id,
             title: title,
             imgName: fileName!,
             imgPath: await ref.getDownloadURL(),
             description: description,
-            createdAt: Timestamp.now());
+            userId: FirebaseAuth.instance.currentUser!.uid,
+            createdAt: Timestamp.now(),
+            status: "Unsolved");
 
         dbref.set(data.toJson());
         Navigator.pop(context);
@@ -152,22 +152,27 @@ class UploadTips {
               color: kPrimaryColor,
             )));
     try {
-      dynamic ref =
-          FirebaseStorage.instance.ref().child('images/tips/$imgName');
+      dynamic ref = FirebaseStorage.instance
+          .ref()
+          .child('images/support_tickets/$imgName');
       if (fileName != null) {
         await ref.delete();
-        ref = FirebaseStorage.instance.ref().child('images/tips/$fileName');
+        ref = FirebaseStorage.instance
+            .ref()
+            .child('images/support_tickets/$fileName');
         await ref.putFile(_photo!);
       }
-      Tip data = Tip(
+      Support data = Support(
           id: id,
           title: title,
           imgPath: await ref.getDownloadURL(),
           description: description,
           imgName: fileName == null ? imgName : fileName!,
-          createdAt: Timestamp.now());
+          userId: FirebaseAuth.instance.currentUser!.uid,
+          createdAt: Timestamp.now(),
+          status: "Unsolved");
       DocumentReference dbref =
-          FirebaseFirestore.instance.collection('tip').doc(id);
+          FirebaseFirestore.instance.collection('support_tickets').doc(id);
 
       await dbref.update(data.toJson());
       Navigator.pop(context);
