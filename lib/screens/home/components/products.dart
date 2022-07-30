@@ -74,7 +74,7 @@ class _ProductsState extends State<Products> {
                 },
                 child: const Text(
                   "Show Category Wise Products",
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 16),
                 ),
                 style: ElevatedButton.styleFrom(primary: kPrimaryColor),
               )

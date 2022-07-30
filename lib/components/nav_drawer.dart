@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_watch/authentication/auth.dart';
 import 'package:plant_watch/screens/home/home_screen.dart';
 
 class NavigationDrawer extends StatefulWidget {
@@ -14,73 +15,195 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        drawerHeader(),
-        drawerBodyItem(
-          icon: Icons.home,
-          text: "Home",
-          onTap: () {
-            HomeScreen.selectedIndex = 0;
-            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-          },
-        ),
-        const Divider(),
-        drawerBodyItem(
-          icon: Icons.event_note,
-          text: 'Categories',
-          onTap: () {
-            Navigator.pop(context);
-            if (ModalRoute.of(context)!.settings.name != '/categories_admin') {
-              Navigator.pushNamed(context, '/categories_admin');
-            }
-          },
-        ),
-        const Divider(),
-        drawerBodyItem(
-          icon: Icons.category,
-          text: 'Products',
-          onTap: () {
-            Navigator.pop(context);
-            if (ModalRoute.of(context)!.settings.name != '/products_admin') {
-              Navigator.pushNamed(context, '/products_admin');
-            }
-          },
-        ),
-        const Divider(),
-        drawerBodyItem(
-          icon: Icons.image,
-          text: 'Carousel',
-          onTap: () {
-            Navigator.pop(context);
-            if (ModalRoute.of(context)!.settings.name != '/carousel_admin') {
-              Navigator.pushNamed(context, '/carousel_admin');
-            }
-          },
-        ),
-        const Divider(),
-        drawerBodyItem(
-          icon: Icons.lightbulb,
-          text: 'Tips',
-          onTap: () {
-            Navigator.pop(context);
-            if (ModalRoute.of(context)!.settings.name != '/tips_admin') {
-              Navigator.pushNamed(context, '/tips_admin');
-            }
-          },
-        ),
-        const Divider(),
-        const SizedBox(
-          height: 100,
-        ),
-        const Text(
-          "Copyright © 2022 PlantCare. All rights reserved.",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-        )
-      ],
-    ));
+        child: FirebaseAuth.instance.currentUser != null
+            ? FutureBuilder<bool>(
+                future: isAdmin(),
+                builder: (context, AsyncSnapshot<bool> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data!) {
+                      return ListView(
+                        padding: EdgeInsets.zero,
+                        children: <Widget>[
+                          drawerHeader(),
+                          drawerBodyItem(
+                            icon: Icons.home,
+                            text: "Home",
+                            onTap: () {
+                              HomeScreen.selectedIndex = 0;
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/', (route) => false);
+                            },
+                          ),
+                          const Divider(),
+                          drawerBodyItem(
+                            icon: Icons.event_note,
+                            text: 'Categories',
+                            onTap: () {
+                              Navigator.pop(context);
+                              if (ModalRoute.of(context)!.settings.name !=
+                                  '/categories_admin') {
+                                Navigator.pushNamed(
+                                    context, '/categories_admin');
+                              }
+                            },
+                          ),
+                          const Divider(),
+                          drawerBodyItem(
+                            icon: Icons.category,
+                            text: 'Products',
+                            onTap: () {
+                              Navigator.pop(context);
+                              if (ModalRoute.of(context)!.settings.name !=
+                                  '/products_admin') {
+                                Navigator.pushNamed(context, '/products_admin');
+                              }
+                            },
+                          ),
+                          const Divider(),
+                          drawerBodyItem(
+                            icon: Icons.image,
+                            text: 'Carousel',
+                            onTap: () {
+                              Navigator.pop(context);
+                              if (ModalRoute.of(context)!.settings.name !=
+                                  '/carousel_admin') {
+                                Navigator.pushNamed(context, '/carousel_admin');
+                              }
+                            },
+                          ),
+                          const Divider(),
+                          drawerBodyItem(
+                            icon: Icons.lightbulb,
+                            text: 'Tips',
+                            onTap: () {
+                              Navigator.pop(context);
+                              if (ModalRoute.of(context)!.settings.name !=
+                                  '/tips_admin') {
+                                Navigator.pushNamed(context, '/tips_admin');
+                              }
+                            },
+                          ),
+                          const Divider(),
+                          drawerBodyItem(
+                            icon: Icons.info,
+                            text: 'About Us',
+                            onTap: () {},
+                          ),
+                          const Divider(),
+                          const SizedBox(
+                            height: 100,
+                          ),
+                          const Text(
+                            "Copyright © 2022 PlantCare. All rights reserved.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 11, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      );
+                    } else {
+                      return ListView(
+                        padding: EdgeInsets.zero,
+                        children: <Widget>[
+                          drawerHeader(),
+                          drawerBodyItem(
+                            icon: Icons.home,
+                            text: "Home",
+                            onTap: () {
+                              HomeScreen.selectedIndex = 0;
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/', (route) => false);
+                            },
+                          ),
+                          const Divider(),
+                          drawerBodyItem(
+                            icon: Icons.event_note,
+                            text: 'Categories',
+                            onTap: () {
+                              Navigator.pop(context);
+                              HomeScreen.selectedIndex = 1;
+                              if (HomeScreen.selectedIndex != 1) {
+                                Navigator.pushNamed(context, '/');
+                              }
+                            },
+                          ),
+                          const Divider(),
+                          drawerBodyItem(
+                            icon: Icons.event_note,
+                            text: 'Profile',
+                            onTap: () {
+                              Navigator.pop(context);
+                              HomeScreen.selectedIndex = 3;
+                              if (HomeScreen.selectedIndex != 3) {
+                                Navigator.pushNamed(context, '/');
+                              }
+                            },
+                          ),
+                          const Divider(),
+                          drawerBodyItem(
+                            icon: Icons.info,
+                            text: 'About Us',
+                            onTap: () {},
+                          ),
+                          const Divider(),
+                          const SizedBox(
+                            height: 100,
+                          ),
+                          const Text(
+                            "Copyright © 2022 PlantCare. All rights reserved.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 11, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      );
+                    }
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                })
+            : ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  drawerHeader(),
+                  drawerBodyItem(
+                    icon: Icons.home,
+                    text: "Home",
+                    onTap: () {
+                      HomeScreen.selectedIndex = 0;
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/', (route) => false);
+                    },
+                  ),
+                  const Divider(),
+                  drawerBodyItem(
+                    icon: Icons.event_note,
+                    text: 'Categories',
+                    onTap: () {
+                      Navigator.pop(context);
+                      HomeScreen.selectedIndex = 1;
+                      if (HomeScreen.selectedIndex != 1) {
+                        Navigator.pushNamed(context, '/');
+                      }
+                    },
+                  ),
+                  const Divider(),
+                  drawerBodyItem(
+                    icon: Icons.info,
+                    text: 'About Us',
+                    onTap: () {},
+                  ),
+                  const Divider(),
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  const Text(
+                    "Copyright © 2022 PlantCare. All rights reserved.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ));
   }
 
   Widget drawerHeader() {
