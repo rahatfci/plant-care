@@ -11,13 +11,13 @@ Widget loginSignUpSelect(Function callSetState) {
           TextButton(
             onPressed: () {
               callSetState(() {
-                Body.signup = false;
+                SignUpBody.signup = false;
               });
             },
             child: Text(
               "Login",
               style: TextStyle(
-                color: Body.signup == false ? kPrimaryColor : kTextColor,
+                color: SignUpBody.signup == false ? kPrimaryColor : kTextColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
@@ -30,7 +30,8 @@ Widget loginSignUpSelect(Function callSetState) {
           Container(
             height: 2,
             width: 75,
-            color: Body.signup == false ? kPrimaryColor : Colors.transparent,
+            color:
+                SignUpBody.signup == false ? kPrimaryColor : Colors.transparent,
           )
         ],
       ),
@@ -42,7 +43,7 @@ Widget loginSignUpSelect(Function callSetState) {
           TextButton(
             onPressed: () {
               callSetState(() {
-                Body.signup = true;
+                SignUpBody.signup = true;
               });
             },
             style: ButtonStyle(
@@ -52,7 +53,7 @@ Widget loginSignUpSelect(Function callSetState) {
             child: Text(
               "SignUp",
               style: TextStyle(
-                color: Body.signup == true ? kPrimaryColor : kTextColor,
+                color: SignUpBody.signup == true ? kPrimaryColor : kTextColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
@@ -61,7 +62,8 @@ Widget loginSignUpSelect(Function callSetState) {
           Container(
             height: 2,
             width: 80,
-            color: Body.signup == true ? kPrimaryColor : Colors.transparent,
+            color:
+                SignUpBody.signup == true ? kPrimaryColor : Colors.transparent,
           )
         ],
       ),

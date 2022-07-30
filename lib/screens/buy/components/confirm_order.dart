@@ -42,6 +42,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   int method = 1;
+  bool orderDone = false;
   @override
   Widget build(BuildContext context) {
     List<String> args =
@@ -55,9 +56,12 @@ class _BodyState extends State<Body> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Select Payment Method"),
+                  const Text(
+                    "Select Payment Method",
+                    style: TextStyle(fontSize: 16),
+                  ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   ListTile(
                     onTap: () {
@@ -65,16 +69,20 @@ class _BodyState extends State<Body> {
                         method = 1;
                       });
                     },
-                    contentPadding: const EdgeInsets.all(7),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 3, horizontal: 12),
                     leading: Icon(Icons.money,
                         color: method == 1 ? Colors.white : kPrimaryColor),
                     title: Text(
                       "Cash on delivery",
                       style: TextStyle(
-                          color: method == 1 ? Colors.white : Colors.blueGrey),
+                          color: method == 1 ? Colors.white : Colors.black),
                     ),
-                    trailing: Icon(Icons.check_circle,
-                        color: method == 1 ? Colors.white : kPrimaryColor),
+                    trailing: method == 1
+                        ? const Icon(Icons.check_circle, color: Colors.white)
+                        : const SizedBox.shrink(),
                     tileColor: method == 1
                         ? kPrimaryColor
                         : Colors.grey.withOpacity(.6),
@@ -88,16 +96,20 @@ class _BodyState extends State<Body> {
                         method = 2;
                       });
                     },
-                    contentPadding: const EdgeInsets.all(7),
-                    leading: Icon(Icons.money,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 3, horizontal: 12),
+                    leading: Icon(Icons.credit_card,
                         color: method == 2 ? Colors.white : kPrimaryColor),
                     title: Text(
                       "Card Payment",
                       style: TextStyle(
-                          color: method == 2 ? Colors.white : Colors.blueGrey),
+                          color: method == 2 ? Colors.white : Colors.black),
                     ),
-                    trailing: Icon(Icons.credit_card,
-                        color: method == 2 ? Colors.white : kPrimaryColor),
+                    trailing: method == 2
+                        ? const Icon(Icons.check_circle, color: Colors.white)
+                        : const SizedBox.shrink(),
                     tileColor: method == 2
                         ? kPrimaryColor
                         : Colors.grey.withOpacity(.6),
@@ -111,16 +123,20 @@ class _BodyState extends State<Body> {
                         method = 3;
                       });
                     },
-                    contentPadding: const EdgeInsets.all(7),
-                    leading: Icon(Icons.money,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 3, horizontal: 12),
+                    leading: Icon(Icons.payment,
                         color: method == 3 ? Colors.white : kPrimaryColor),
                     title: Text(
                       "Bkash Payment",
                       style: TextStyle(
-                          color: method == 3 ? Colors.white : Colors.blueGrey),
+                          color: method == 3 ? Colors.white : Colors.black),
                     ),
-                    trailing: Icon(Icons.payment,
-                        color: method == 3 ? Colors.white : kPrimaryColor),
+                    trailing: method == 3
+                        ? const Icon(Icons.check_circle, color: Colors.white)
+                        : const SizedBox.shrink(),
                     tileColor: method == 3
                         ? kPrimaryColor
                         : Colors.grey.withOpacity(.6),
@@ -128,45 +144,66 @@ class _BodyState extends State<Body> {
                   const SizedBox(
                     height: 15,
                   ),
-                  const Text("Order Summery"),
+                  const Text(
+                    "Order Summery",
+                    style: TextStyle(fontSize: 16),
+                  ),
                   const SizedBox(
                     height: 15,
                   ),
                   Card(
+                    elevation: 10,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Subtotal"),
-                              Text((CartBody.totalPrice / 2).toString()),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Subtotal",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                Text((CartBody.totalPrice / 2).toString(),
+                                    style: const TextStyle(fontSize: 16)),
+                              ],
+                            ),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text("Shipping"),
-                              Text("100"),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: const [
+                                Text("Shipping",
+                                    style: TextStyle(fontSize: 16)),
+                                Text("100", style: TextStyle(fontSize: 16)),
+                              ],
+                            ),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
                           Container(
-                            color: Colors.grey.withOpacity(.6),
-                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(.6),
+                                borderRadius: BorderRadius.circular(5)),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 13),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text("Total"),
-                                Text(
-                                    (CartBody.totalPrice / 2 + 100).toString()),
+                                const Text("Total",
+                                    style: TextStyle(fontSize: 16)),
+                                Text((CartBody.totalPrice / 2 + 100).toString(),
+                                    style: const TextStyle(fontSize: 16)),
                               ],
                             ),
                           ),
@@ -205,38 +242,65 @@ class _BodyState extends State<Body> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    showDialog(
-                        context: context,
-                        builder: (context) => const Center(
-                                child: CircularProgressIndicator(
-                              color: kPrimaryColor,
-                            )));
-                    Map<String, int> productIds = {};
-                    await FirebaseFirestore.instance
-                        .collection('cart')
-                        .where('userId',
-                            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                        .get()
-                        .then((value) => value.docs.map((e) {
-                              Cart product = Cart.fromJson(e.data());
-                              productIds.addAll(
-                                  {product.productId: product.quantity});
-                            }));
-                    print(productIds);
-                    var dbref =
-                        FirebaseFirestore.instance.collection('orders').doc();
-                    dynamic data = Order(
-                        id: dbref.id,
-                        userId: FirebaseAuth.instance.currentUser!.uid,
-                        date: Timestamp.now(),
-                        status: "Completed",
-                        paymentMethod: method.toString(),
-                        details: args[0] + '/' + args[1],
-                        phone: args[2],
-                        products: productIds,
-                        total: (CartBody.totalPrice / 2 + 100).toString());
-                    await dbref.set(data.toJson());
-                    Navigator.pop(context);
+                    if (orderDone) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          duration: Duration(milliseconds: 700),
+                          content: Text(
+                            "The Order has been placed successfully",
+                            style: TextStyle(fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                          backgroundColor: kPrimaryColor,
+                        ),
+                      );
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (context) => const Center(
+                                  child: CircularProgressIndicator(
+                                color: kPrimaryColor,
+                              )));
+                      Map<String, int> productIds = {};
+                      await FirebaseFirestore.instance
+                          .collection('cart')
+                          .where('userId',
+                              isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                          .get()
+                          .then((value) => value.docs.map((e) {
+                                Cart product = Cart.fromJson(e.data());
+                                productIds.addAll(
+                                    {product.productId: product.quantity});
+                              }));
+                      print("Hello ${productIds}");
+                      var dbref =
+                          FirebaseFirestore.instance.collection('orders').doc();
+                      dynamic data = Order(
+                          id: dbref.id,
+                          userId: FirebaseAuth.instance.currentUser!.uid,
+                          date: Timestamp.now(),
+                          status: "Completed",
+                          paymentMethod: method.toString(),
+                          details: args[0] + '/' + args[1],
+                          phone: args[2],
+                          products: productIds,
+                          total: (CartBody.totalPrice / 2 + 100).toString());
+                      await dbref.set(data.toJson());
+                      //productIds.map((key, value) {});
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          duration: Duration(milliseconds: 700),
+                          content: Text(
+                            "The Order has been placed successfully",
+                            style: TextStyle(fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                          backgroundColor: kPrimaryColor,
+                        ),
+                      );
+                      orderDone = true;
+                    }
                   },
                   child: const Text(
                     "Confirm Order",

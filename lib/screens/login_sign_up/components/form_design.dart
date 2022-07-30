@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_watch/constants.dart';
+import 'package:plant_watch/screens/login_sign_up/components/body.dart';
 
 Widget topStyle(BuildContext context) {
   return Container(
@@ -10,14 +11,20 @@ Widget topStyle(BuildContext context) {
 }
 
 Widget welcomeText() {
-  return const Positioned(
+  return Positioned(
     top: 80,
     left: 20,
-    child: Text(
-      "Welcome !",
-      style:
-          TextStyle(color: Colors.white, fontSize: 24, fontFamily: 'Poppins'),
-    ),
+    child: SignUpBody.signup
+        ? const Text(
+            "Sign In !",
+            style: TextStyle(
+                color: Colors.white, fontSize: 24, fontFamily: 'Poppins'),
+          )
+        : const Text(
+            "Log In !",
+            style: TextStyle(
+                color: Colors.white, fontSize: 24, fontFamily: 'Poppins'),
+          ),
   );
 }
 

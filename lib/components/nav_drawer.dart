@@ -1,9 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/screens/home/home_screen.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
+  @override
+  State<NavigationDrawer> createState() => _NavigationDrawerState();
+}
+
+class _NavigationDrawerState extends State<NavigationDrawer> {
+  User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -64,6 +71,14 @@ class NavigationDrawer extends StatelessWidget {
           },
         ),
         const Divider(),
+        const SizedBox(
+          height: 100,
+        ),
+        const Text(
+          "Copyright © 2022 PlantCare. All rights reserved.",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+        )
       ],
     ));
   }
@@ -80,11 +95,13 @@ class NavigationDrawer extends StatelessWidget {
       child: Stack(
         children: const <Widget>[
           Positioned(
-            child: Text("Welcome to Plant Trade",
+            child: Text("Welcome to Plant Care",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
-                    fontWeight: FontWeight.w500)),
+                    fontWeight: FontWeight.w500,
+                    wordSpacing: 3,
+                    letterSpacing: 1)),
             left: 16,
             bottom: 12,
           )

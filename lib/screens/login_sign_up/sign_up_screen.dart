@@ -9,7 +9,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        child: const Body(),
+        child: const SignUpBody(),
         onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
       ),
     );

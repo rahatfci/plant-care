@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/sign_up': (context) => const SignUpScreen(),
         '/categories': (context) => const CategoriesScreen(),
-        '/cart': (context) => CartScreen(),
+        '/cart': (context) => const CartScreen(),
         '/settings': (context) => SettingsScreen(),
         '/categories_admin': (context) => const CategoriesAdminScreen(),
         '/products_admin': (context) => const ProductsAdminScreen(),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/controllers/cart_controller.dart';
 import 'package:plant_watch/models/product_model.dart';
+import 'package:plant_watch/screens/home/home_screen.dart';
 
 import '../../components/app_bar.dart';
 import '../../components/nav_drawer.dart';
@@ -157,20 +158,25 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             TextButton(
                               onPressed: () async {
-                                setState(() {
-                                  addToCart = const Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
+                                if (FirebaseAuth.instance.currentUser == null) {
+                                  HomeScreen.selectedIndex = 2;
+                                  Navigator.pushNamed(context, '/');
+                                } else {
+                                  setState(() {
+                                    addToCart = const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5.0),
+                                        child: SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                });
+                                    );
+                                  });
+                                }
                                 await CartController.addToCart(
                                     widget.product.id,
                                     1,
@@ -194,8 +200,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: addToCart,
                             ),
                             TextButton(
-                              onPressed: () =>
-                                  Navigator.pushNamed(context, '/cart'),
+                              onPressed: () {
+                                if (FirebaseAuth.instance.currentUser == null) {
+                                  HomeScreen.selectedIndex = 2;
+                                  Navigator.pushNamed(context, '/');
+                                } else {
+                                  Navigator.pushNamed(context, '/cart');
+                                }
+                              },
                               style: TextButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 6),

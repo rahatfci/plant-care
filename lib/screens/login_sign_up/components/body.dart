@@ -9,14 +9,14 @@ import 'package:plant_watch/screens/login_sign_up/components/login_signup_select
 import '../../../authentication/auth.dart';
 import 'input_field.dart';
 
-class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+class SignUpBody extends StatefulWidget {
+  const SignUpBody({Key? key}) : super(key: key);
   static bool signup = false;
   @override
-  State<Body> createState() => _BodyState();
+  State<SignUpBody> createState() => _SignUpBodyState();
 }
 
-class _BodyState extends State<Body> {
+class _SignUpBodyState extends State<SignUpBody> {
   User? user = FirebaseAuth.instance.currentUser;
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -50,13 +50,13 @@ class _BodyState extends State<Body> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Body.signup == true
+                    SignUpBody.signup == true
                         ? TextInputField(
                             textInputType: TextInputType.name,
                             textEditingController: name,
                             label: "Name",
                             validator: (value) =>
-                                nameValidator(value, Body.signup),
+                                nameValidator(value, SignUpBody.signup),
                           )
                         : const SizedBox.shrink(),
                     const SizedBox(
@@ -87,7 +87,7 @@ class _BodyState extends State<Body> {
                                 borderRadius: BorderRadius.circular(25))),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            if (Body.signup == true) {
+                            if (SignUpBody.signup == true) {
                               await signUpWithEmail(
                                   name: name.text.trim(),
                                   email: email.text.trim(),

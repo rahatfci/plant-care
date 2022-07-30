@@ -21,7 +21,7 @@ class _CartBodyState extends State<CartBody> {
         StreamBuilder<List<Cart>>(
             stream: CartController.allCart(),
             builder: (context, AsyncSnapshot<List<Cart>> snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data != null) {
                 CartBody.totalPrice = 0;
                 return Expanded(
                   child: ListView(

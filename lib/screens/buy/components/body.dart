@@ -33,18 +33,31 @@ class _BodyState extends State<Body> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    const Text(
+                      "Information for Order",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     formField(nameAdd, "Name", TextInputType.name,
                         (value) => productNameValidator(value)),
                     const SizedBox(
                       height: 15,
                     ),
-                    formField(phoneAdd, "Phone", TextInputType.text,
-                        (value) => noValidation(value)),
+                    formField(phoneAdd, "Phone", TextInputType.phone,
+                        (value) => phoneNumberValidator(value)),
                     const SizedBox(
                       height: 15,
                     ),
-                    formField(emailAdd, "Email (Optional)",
-                        TextInputType.number, (value) => noValidation(value)),
+                    formField(
+                        emailAdd,
+                        "Email (Optional)",
+                        TextInputType.emailAddress,
+                        (value) => noValidation(value)),
                     const SizedBox(
                       height: 15,
                     ),
@@ -53,13 +66,13 @@ class _BodyState extends State<Body> {
                     const SizedBox(
                       height: 15,
                     ),
-                    formField(districtAdd, "District", TextInputType.number,
+                    formField(districtAdd, "District", TextInputType.text,
                         (value) => productNameValidator(value)),
                     const SizedBox(
                       height: 15,
                     ),
-                    formField(noteAdd, "Note (Optional)", TextInputType.number,
-                        (value) => productDescriptionValidator(value)),
+                    formField(noteAdd, "Note (Optional)", TextInputType.text,
+                        (value) => noValidation(value)),
                     const SizedBox(
                       height: 15,
                     ),
@@ -67,9 +80,6 @@ class _BodyState extends State<Body> {
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 8,
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -96,6 +106,7 @@ class _BodyState extends State<Body> {
                 GestureDetector(
                   onTap: () {
                     if (formKey.currentState!.validate()) {
+                      FocusManager.instance.primaryFocus!.unfocus();
                       Navigator.pushNamed(
                         context,
                         '/confirm_order',
@@ -117,6 +128,9 @@ class _BodyState extends State<Body> {
                 ),
               ],
             ),
+          ),
+          const SizedBox(
+            height: 15,
           )
         ],
       ),

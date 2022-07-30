@@ -117,7 +117,13 @@ class UploadCategory {
             imgPath: await ref.getDownloadURL(),
             imgName: fileName!,
             color: await PaletteGenerator.fromImageProvider(FileImage(_photo!))
-                .then((value) => value.vibrantColor!.color.value));
+                .then((value) {
+              if (value.vibrantColor != null) {
+                return value.vibrantColor!.color.value;
+              } else {
+                return value.dominantColor!.color.value;
+              }
+            }));
 
         dbref.set(data.toJson());
         Navigator.pop(context);

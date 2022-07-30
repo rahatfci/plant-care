@@ -116,6 +116,13 @@ String? productPriceValidator(String? value) {
   return null;
 }
 
+String? phoneNumberValidator(String? value) {
+  if (value!.isEmpty) {
+    return "Please enter the phone no";
+  }
+  return null;
+}
+
 String? noValidation(String? value) {
   return null;
 }

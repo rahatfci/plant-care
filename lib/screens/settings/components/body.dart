@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_watch/authentication/auth.dart';
 import 'package:plant_watch/models/user_model.dart';
 import 'package:plant_watch/screens/settings/components/build_tile.dart';
 import 'package:plant_watch/screens/settings/components/edit_profile.dart';
@@ -89,16 +90,15 @@ class _SettingsBodyState extends State<SettingsBody> {
                             user.email!,
                             style: const TextStyle(fontSize: 16),
                           ),
-                          const SizedBox(
-                            height: 15,
-                          ),
                           GridView(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 3),
                             shrinkWrap: true,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10,
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8,
                                     mainAxisExtent: 110),
                             children: [
                               buildTile(
@@ -122,14 +122,27 @@ class _SettingsBodyState extends State<SettingsBody> {
                                 child: buildTile("Help & Support", 0xffefbea3,
                                     Icons.support),
                               ),
-                              const SizedBox(
-                                height: 10,
-                              )
                             ],
                           ),
                           const SizedBox(
-                            height: 10,
+                            height: 20,
                           ),
+                          TextButton.icon(
+                            onPressed: () => signOut(context),
+                            label: const Text(
+                              "Logout",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                            icon: const Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                            ),
+                            style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                backgroundColor: kPrimaryColor),
+                          )
                         ],
                       ),
                     );

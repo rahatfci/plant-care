@@ -5,9 +5,13 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:plant_watch/constants.dart';
 import 'package:plant_watch/models/user_model.dart';
-import 'package:plant_watch/screens/login_sign_up/sign_up_screen.dart';
 
+import '../screens/cart/components/body.dart';
+import '../screens/categories/components/body.dart';
+import '../screens/home/components/body.dart';
 import '../screens/home/home_screen.dart';
+import '../screens/login_sign_up/components/body.dart';
+import '../screens/settings/components/body.dart';
 
 CollectionReference reference = FirebaseFirestore.instance.collection('users');
 
@@ -45,6 +49,13 @@ signUpWithEmail(
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set(userCustom.toJson());
     });
+    HomeScreen.pages = const[
+      HomeBody(),
+      CategoryBody(),
+       CartBody(),
+     SettingsBody()
+
+    ];
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -80,6 +91,13 @@ Future<void> signInWithEmail({
       email: email,
       password: password,
     );
+    HomeScreen.pages = const[
+      HomeBody(),
+      CategoryBody(),
+      CartBody(),
+      SettingsBody()
+
+    ];
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -139,6 +157,13 @@ signInWithGoogle(
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .set(userCustom.toJson());
       }
+      HomeScreen.pages = const[
+        HomeBody(),
+        CategoryBody(),
+        CartBody(),
+        SettingsBody()
+
+      ];
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -198,6 +223,13 @@ signInWithFacebook(BuildContext context) async {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set(userCustom.toJson());
     }
+    HomeScreen.pages = const[
+      HomeBody(),
+      CategoryBody(),
+      CartBody(),
+      SettingsBody()
+
+    ];
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -260,10 +292,13 @@ signOut(BuildContext context) async {
 
     await _auth.signOut();
     HomeScreen.selectedIndex = 0;
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const SignUpScreen()),
-        (route) => false);
+    HomeScreen.pages = const[
+      HomeBody(),
+      CategoryBody(),
+      SignUpBody(),
+      SignUpBody()
+    ];
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   } catch (e) {
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(

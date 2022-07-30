@@ -8,12 +8,16 @@ class CartController {
   static final CollectionReference reference =
       FirebaseFirestore.instance.collection('cart');
 
-  static Stream<List<Cart>> allCart() {
-    return reference
-        .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .snapshots()
-        .map(
-            (event) => event.docs.map((e) => Cart.fromJson(e.data())).toList());
+  static Stream<List<Cart>>? allCart() {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return null;
+    } else {
+      return reference
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .snapshots()
+          .map((event) =>
+              event.docs.map((e) => Cart.fromJson(e.data())).toList());
+    }
   }
 
   static Stream<Product> cartProduct(String productId) {
