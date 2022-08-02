@@ -9,7 +9,7 @@ class Order {
   final String details;
   final String phone;
   final String total;
-  final Map<String, int> products;
+  final Map<String, dynamic> products;
   Order(
       {required this.id,
       required this.userId,

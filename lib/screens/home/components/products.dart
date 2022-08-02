@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/constants.dart';
@@ -114,46 +115,98 @@ class _ProductsState extends State<Products> {
               children: [
                 Hero(
                   tag: product.id,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        topLeft: Radius.circular(10)),
-                    child: CachedNetworkImage(
-                      imageUrl: product.imgPath,
-                      height: 140,
-                      progressIndicatorBuilder: (BuildContext context,
-                              String url, DownloadProgress progress) =>
-                          Center(
-                        child: SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: CircularProgressIndicator(
-                              color: kPrimaryColor, value: progress.progress),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.error,
-                            color: kPrimaryColor,
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Expanded(
-                            child: Text(
-                              error.toString(),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  fontSize: 12, overflow: TextOverflow.fade),
+                  child: product.quantity <= 0
+                      ? Badge(
+                          shape: BadgeShape.square,
+                          badgeContent: const Text("Sold Out",
+                              style: TextStyle(color: Colors.white)),
+                          badgeColor: kPrimaryColor,
+                          animationType: BadgeAnimationType.scale,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10)),
+                            child: CachedNetworkImage(
+                              imageUrl: product.imgPath,
+                              height: 140,
+                              progressIndicatorBuilder: (BuildContext context,
+                                      String url, DownloadProgress progress) =>
+                                  Center(
+                                child: SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: CircularProgressIndicator(
+                                      color: kPrimaryColor,
+                                      value: progress.progress),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.error,
+                                    color: kPrimaryColor,
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      error.toString(),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          overflow: TextOverflow.fade),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                          ),
+                        )
+                      : ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              topLeft: Radius.circular(10)),
+                          child: CachedNetworkImage(
+                            imageUrl: product.imgPath,
+                            height: 140,
+                            progressIndicatorBuilder: (BuildContext context,
+                                    String url, DownloadProgress progress) =>
+                                Center(
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: CircularProgressIndicator(
+                                    color: kPrimaryColor,
+                                    value: progress.progress),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.error,
+                                  color: kPrimaryColor,
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    error.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        overflow: TextOverflow.fade),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                 ),
                 const SizedBox(
                   height: 10,

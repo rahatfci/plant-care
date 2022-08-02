@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/components/app_bar.dart';
 import 'package:plant_watch/models/order_model.dart';
+import 'package:plant_watch/models/user_model.dart';
 import 'package:plant_watch/screens/cart/components/body.dart';
+import 'package:plant_watch/screens/home/home_screen.dart';
 
 import '../../../components/nav_drawer.dart';
 import '../../../constants.dart';
@@ -261,18 +263,19 @@ class _BodyState extends State<Body> {
                                   child: CircularProgressIndicator(
                                 color: kPrimaryColor,
                               )));
-                      Map<String, int> productIds = {};
-                      await FirebaseFirestore.instance
+                      Map<String, dynamic> productIds = {};
+                      FirebaseFirestore.instance
                           .collection('cart')
                           .where('userId',
                               isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                          .get()
-                          .then((value) => value.docs.map((e) {
+                          .snapshots()
+                          .map((event) => event.docs.map((e) {
                                 Cart product = Cart.fromJson(e.data());
-                                productIds.addAll(
-                                    {product.productId: product.quantity});
+                                productIds.addAll({
+                                  product.productId: product.quantity.toString()
+                                });
                               }));
-                      print("Hello ${productIds}");
+
                       var dbref =
                           FirebaseFirestore.instance.collection('orders').doc();
                       dynamic data = Order(
@@ -286,11 +289,19 @@ class _BodyState extends State<Body> {
                           products: productIds,
                           total: (CartBody.totalPrice / 2 + 100).toString());
                       await dbref.set(data.toJson());
-                      //productIds.map((key, value) {});
+                      UserCustom user = await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .get()
+                          .then((value) => UserCustom.fromJson(value.data()));
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .update({'totalOrder': user.totalOrder + 1});
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          duration: Duration(milliseconds: 700),
+                          duration: Duration(milliseconds: 900),
                           content: Text(
                             "The Order has been placed successfully",
                             style: TextStyle(fontSize: 18),
@@ -300,6 +311,10 @@ class _BodyState extends State<Body> {
                         ),
                       );
                       orderDone = true;
+                      HomeScreen.selectedIndex = 0;
+                      await Future.delayed(const Duration(milliseconds: 500));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/total_order', (route) => false);
                     }
                   },
                   child: const Text(

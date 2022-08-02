@@ -162,32 +162,44 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   HomeScreen.selectedIndex = 2;
                                   Navigator.pushNamed(context, '/');
                                 } else {
-                                  setState(() {
-                                    addToCart = const Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
+                                  if (widget.product.quantity <= 0) {
+                                    setState(() {
+                                      addToCart = const Text(
+                                        "Sold Out",
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                      );
+                                    });
+                                  } else {
+                                    setState(() {
+                                      addToCart = const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(5.0),
+                                          child: SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  });
+                                      );
+                                    });
+                                    await CartController.addToCart(
+                                        widget.product.id,
+                                        1,
+                                        FirebaseAuth.instance.currentUser!.uid);
+                                    setState(() {
+                                      addToCart = const Text(
+                                        "Added to Cart",
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                      );
+                                    });
+                                    HomeScreen.selectedIndex = 2;
+                                    Navigator.pushNamed(context, '/');
+                                  }
                                 }
-                                await CartController.addToCart(
-                                    widget.product.id,
-                                    1,
-                                    FirebaseAuth.instance.currentUser!.uid);
-                                setState(() {
-                                  addToCart = const Text(
-                                    "Added to Cart",
-                                    style: TextStyle(
-                                        fontSize: 18, color: Colors.white),
-                                  );
-                                });
                               },
                               style: TextButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
@@ -201,12 +213,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                             TextButton(
                               onPressed: () {
-                                if (FirebaseAuth.instance.currentUser == null) {
-                                  HomeScreen.selectedIndex = 2;
-                                  Navigator.pushNamed(context, '/');
-                                } else {
-                                  Navigator.pushNamed(context, '/cart');
-                                }
+                                HomeScreen.selectedIndex = 2;
+                                Navigator.pushNamed(context, '/');
                               },
                               style: TextButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(

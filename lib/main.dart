@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/constants.dart';
+import 'package:plant_watch/screens/about_us.dart';
 import 'package:plant_watch/screens/buy/buy_screen.dart';
 import 'package:plant_watch/screens/buy/components/confirm_order.dart';
 import 'package:plant_watch/screens/carousel_admin/carousel_admin_screen.dart';
@@ -9,6 +10,7 @@ import 'package:plant_watch/screens/categories/categories_screen.dart';
 import 'package:plant_watch/screens/categories_admin/categories_admin_screen.dart';
 import 'package:plant_watch/screens/home/home_screen.dart';
 import 'package:plant_watch/screens/login_sign_up/sign_up_screen.dart';
+import 'package:plant_watch/screens/order_list.dart';
 import 'package:plant_watch/screens/products_admin/products_admin_screen.dart';
 import 'package:plant_watch/screens/settings/settings_screen.dart';
 import 'package:plant_watch/screens/support/support_screen.dart';
@@ -49,6 +51,8 @@ class MyApp extends StatelessWidget {
         '/support': (context) => const SupportScreen(),
         '/buy': (context) => const BuyScreen(),
         '/confirm_order': (context) => const ConfirmOrderScreen(),
+        '/about_us': (context) => const AboutUs(),
+        '/total_order': (context) => TotalOrder(),
       },
     );
   }

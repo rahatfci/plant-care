@@ -6,7 +6,11 @@ class OrdersController {
   static CollectionReference reference =
       FirebaseFirestore.instance.collection('orders');
   static Stream<List<Order>> allOrders(String userId) {
-    return reference.where('userId', isEqualTo: userId).snapshots().map(
-        (event) => event.docs.map((e) => Order.fromJson(e.data())).toList());
+    return reference
+        .where('userId', isEqualTo: userId)
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((event) =>
+            event.docs.map((e) => Order.fromJson(e.data())).toList());
   }
 }

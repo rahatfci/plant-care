@@ -12,6 +12,7 @@ class NavigationDrawer extends StatefulWidget {
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
   User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -87,7 +88,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                           drawerBodyItem(
                             icon: Icons.info,
                             text: 'About Us',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pop(context);
+                              if (ModalRoute.of(context)!.settings.name !=
+                                  '/about_us') {
+                                Navigator.pushNamed(context, '/about_us');
+                              }
+                            },
                           ),
                           const Divider(),
                           const SizedBox(
@@ -121,8 +128,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                             text: 'Categories',
                             onTap: () {
                               Navigator.pop(context);
-                              HomeScreen.selectedIndex = 1;
+
                               if (HomeScreen.selectedIndex != 1) {
+                                HomeScreen.selectedIndex = 1;
                                 Navigator.pushNamed(context, '/');
                               }
                             },
@@ -143,7 +151,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                           drawerBodyItem(
                             icon: Icons.info,
                             text: 'About Us',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pop(context);
+                              if (ModalRoute.of(context)!.settings.name !=
+                                  '/about_us') {
+                                Navigator.pushNamed(context, '/about_us');
+                              }
+                            },
                           ),
                           const Divider(),
                           const SizedBox(
@@ -181,8 +195,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                     text: 'Categories',
                     onTap: () {
                       Navigator.pop(context);
-                      HomeScreen.selectedIndex = 1;
+
                       if (HomeScreen.selectedIndex != 1) {
+                        HomeScreen.selectedIndex = 1;
                         Navigator.pushNamed(context, '/');
                       }
                     },
@@ -191,7 +206,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   drawerBodyItem(
                     icon: Icons.info,
                     text: 'About Us',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pop(context);
+                      if (ModalRoute.of(context)!.settings.name !=
+                          '/about_us') {
+                        Navigator.pushNamed(context, '/about_us');
+                      }
+                    },
                   ),
                   const Divider(),
                   const SizedBox(

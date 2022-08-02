@@ -8,6 +8,8 @@ environment:
   sdk: ">=2.16.2 <3.0.0"
 
 dependencies:
+
+  badges: ^2.0.3
   cached_network_image: ^3.2.0
   carousel_slider: ^4.1.1
   cloud_firestore: ^3.1.13
@@ -19,6 +21,7 @@ dependencies:
   flutter_facebook_auth: ^4.3.0
   flutter_native_splash: ^2.1.6
   flutter_svg: ^1.0.3
+  google_maps_flutter: ^2.1.10
   google_sign_in: ^5.3.0
   image_picker: ^0.8.5+3
   palette_generator: ^0.3.3

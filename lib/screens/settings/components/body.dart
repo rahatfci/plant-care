@@ -101,9 +101,14 @@ class _SettingsBodyState extends State<SettingsBody> {
                                     mainAxisSpacing: 8,
                                     mainAxisExtent: 110),
                             children: [
-                              buildTile(
-                                  "Total Order", 0xffdc9ba8, Icons.shopping_bag,
-                                  count: snapshot.data!.totalOrder),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/total_order');
+                                },
+                                child: buildTile("Total Order", 0xffdc9ba8,
+                                    Icons.shopping_bag,
+                                    count: snapshot.data!.totalOrder),
+                              ),
                               buildTile(
                                   "Total Saved", 0xff92b2a7, Icons.local_offer,
                                   count: snapshot.data!.totalSaved),

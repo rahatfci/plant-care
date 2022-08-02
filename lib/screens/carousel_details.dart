@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/models/carousel_model.dart';
 
@@ -26,9 +27,40 @@ class _CarouselDetailsState extends State<CarouselDetails> {
           children: [
             Hero(
               tag: widget.carousel.id,
-              child: Image.network(
-                widget.carousel.imgPath,
+              child: CachedNetworkImage(
+                imageUrl: widget.carousel.imgPath,
                 height: 300,
+                progressIndicatorBuilder: (BuildContext context, String url,
+                        DownloadProgress progress) =>
+                    Center(
+                  child: SizedBox(
+                    height: 70,
+                    width: 70,
+                    child: CircularProgressIndicator(
+                        color: kPrimaryColor, value: progress.progress),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error,
+                      color: kPrimaryColor,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Expanded(
+                      child: Text(
+                        error.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 12, overflow: TextOverflow.fade),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Expanded(

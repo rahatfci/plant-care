@@ -7,6 +7,8 @@
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
        android:resizeableActivity="false">
+       <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value=""/>
        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
        <activity android:name="com.facebook.FacebookActivity"
