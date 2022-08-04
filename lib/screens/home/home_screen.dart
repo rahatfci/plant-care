@@ -46,10 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: HomeScreen.pages,
           )),
       bottomNavigationBar: myBottomNavBar(setState),
-      drawer: (FirebaseAuth.instance.currentUser == null &&
-              (HomeScreen.selectedIndex == 2 || HomeScreen.selectedIndex == 3))
-          ? null
-          : const NavigationDrawer(),
+      drawer: const NavigationDrawer(),
       drawerEnableOpenDragGesture: false,
     );
   }

@@ -49,36 +49,6 @@ class HomeBody extends StatelessWidget {
             height: 15,
           ),
           Products(),
-          // const SizedBox(
-          //   height: 15,
-          // ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     const Text(
-          //       "Sellers",
-          //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          //     ),
-          //     GestureDetector(
-          //         onTap: () {
-          //           Navigator.push(context,
-          //               MaterialPageRoute(builder: (context) {
-          //             return SellerScreen();
-          //           }));
-          //         },
-          //         child: const Text(
-          //           'View All >',
-          //           style: TextStyle(
-          //               color: kPrimaryColor,
-          //               fontWeight: FontWeight.w500,
-          //               fontSize: 16),
-          //         ))
-          //   ],
-          // ),
-          // const SizedBox(
-          //   height: 15,
-          // ),
-          // const Sellers(),
           SizedBox(
             height: 15,
           ),

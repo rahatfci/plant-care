@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/controllers/cart_controller.dart';
+import 'package:plant_watch/models/cart_model.dart';
 import 'package:plant_watch/models/product_model.dart';
 import 'package:plant_watch/screens/home/home_screen.dart';
 
@@ -185,19 +187,50 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                       );
                                     });
-                                    await CartController.addToCart(
-                                        widget.product.id,
-                                        1,
-                                        FirebaseAuth.instance.currentUser!.uid);
-                                    setState(() {
-                                      addToCart = const Text(
-                                        "Added to Cart",
-                                        style: TextStyle(
-                                            fontSize: 18, color: Colors.white),
-                                      );
-                                    });
-                                    HomeScreen.selectedIndex = 2;
-                                    Navigator.pushNamed(context, '/');
+                                    late bool isAvailable = false;
+                                    List<Cart> carts = await FirebaseFirestore
+                                        .instance
+                                        .collection('cart')
+                                        .where('userId',
+                                            isEqualTo: FirebaseAuth
+                                                .instance.currentUser!.uid)
+                                        .get()
+                                        .then((value) => value.docs
+                                            .map((e) => Cart.fromJson(e.data()))
+                                            .toList());
+                                    for (Cart element in carts) {
+                                      if (widget.product.id ==
+                                          element.productId) {
+                                        isAvailable = true;
+                                        break;
+                                      }
+                                    }
+                                    if (isAvailable) {
+                                      setState(() {
+                                        addToCart = const Text(
+                                          "Already Added",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white),
+                                        );
+                                      });
+                                    } else {
+                                      await CartController.addToCart(
+                                          widget.product.id,
+                                          1,
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid);
+                                      setState(() {
+                                        addToCart = const Text(
+                                          "Added to Cart",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white),
+                                        );
+                                      });
+                                      HomeScreen.selectedIndex = 2;
+                                      Navigator.pushNamed(context, '/');
+                                    }
                                   }
                                 }
                               },

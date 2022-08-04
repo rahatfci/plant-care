@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_watch/components/app_bar.dart';
 import 'package:plant_watch/models/order_model.dart';
+import 'package:plant_watch/models/product_model.dart';
 import 'package:plant_watch/models/user_model.dart';
 import 'package:plant_watch/screens/cart/components/body.dart';
 import 'package:plant_watch/screens/home/home_screen.dart';
@@ -264,18 +265,19 @@ class _BodyState extends State<Body> {
                                 color: kPrimaryColor,
                               )));
                       Map<String, dynamic> productIds = {};
-                      FirebaseFirestore.instance
+
+                      List<Cart> products = await FirebaseFirestore.instance
                           .collection('cart')
                           .where('userId',
                               isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                          .snapshots()
-                          .map((event) => event.docs.map((e) {
-                                Cart product = Cart.fromJson(e.data());
-                                productIds.addAll({
-                                  product.productId: product.quantity.toString()
-                                });
-                              }));
-
+                          .get()
+                          .then((event) => event.docs
+                              .map((e) => Cart.fromJson(e.data()))
+                              .toList());
+                      for (Cart element in products) {
+                        productIds.addAll(
+                            {element.productId: element.quantity.toString()});
+                      }
                       var dbref =
                           FirebaseFirestore.instance.collection('orders').doc();
                       dynamic data = Order(
@@ -284,20 +286,36 @@ class _BodyState extends State<Body> {
                           date: Timestamp.now(),
                           status: "Completed",
                           paymentMethod: method.toString(),
-                          details: args[0] + '/' + args[1],
+                          details: '${args[0]}/${args[1]}',
                           phone: args[2],
                           products: productIds,
                           total: (CartBody.totalPrice / 2 + 100).toString());
                       await dbref.set(data.toJson());
-                      UserCustom user = await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                      DocumentReference<Map<String, dynamic>> userDocument =
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(FirebaseAuth.instance.currentUser!.uid);
+                      UserCustom user = await userDocument
                           .get()
                           .then((value) => UserCustom.fromJson(value.data()));
-                      await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                      await userDocument
                           .update({'totalOrder': user.totalOrder + 1});
+                      for (Cart element in products) {
+                        DocumentReference<Map<String, dynamic>> document =
+                            FirebaseFirestore.instance
+                                .collection("products")
+                                .doc(element.productId);
+                        Product product = await document
+                            .get()
+                            .then((value) => Product.fromJson(value.data()));
+                        await document.update(
+                            {'quantity': product.quantity - element.quantity});
+                        FirebaseFirestore.instance
+                            .collection('cart')
+                            .doc(element.id)
+                            .delete();
+                      }
+
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
