@@ -284,7 +284,7 @@ class _BodyState extends State<Body> {
                           id: dbref.id,
                           userId: FirebaseAuth.instance.currentUser!.uid,
                           date: Timestamp.now(),
-                          status: "Completed",
+                          status: "Pending",
                           paymentMethod: method.toString(),
                           details: '${args[0]}/${args[1]}',
                           phone: args[2],
